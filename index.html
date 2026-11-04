@@ -239,6 +239,30 @@
     background: rgba(247, 185, 85, .08);
   }
 
+  button.pill {
+    font-family: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: .2s border-color, .2s color, .2s box-shadow;
+  }
+
+  button.pill:hover {
+    border-color: rgba(52, 211, 153, .55);
+    color: var(--ink);
+    box-shadow: 0 0 0 4px rgba(52, 211, 153, .08);
+  }
+
+  button.pill .hint { color: #6f8492; font-weight: 500; }
+
+  button.pill.copied {
+    border-color: rgba(52, 211, 153, .6);
+    background: rgba(52, 211, 153, .12);
+  }
+
+  button.pill.copied code { color: var(--emerald); }
+
   /* ---- карточка факела ---- */
   .torch-card {
     position: relative;
@@ -642,8 +666,27 @@
   }
 
   .foot-in b { font-family: var(--head); font-size: 14px; color: var(--ink); letter-spacing: .04em; }
-  .foot-in a { color: var(--emerald); text-decoration: none; }
-  .foot-in a:hover { text-decoration: underline; }
+
+  .foot-in code {
+    font: 600 13.5px/1.5 ui-monospace, "Cascadia Mono", monospace;
+    color: var(--ink);
+    padding: 2px 8px;
+    border-radius: 7px;
+    background: rgba(255, 255, 255, .06);
+    border: 1px solid var(--line);
+  }
+  .foot-in p { margin: 6px 0 0; }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
 
   /* ---- анимация появления ---- */
   .reveal { opacity: 0; transform: translateY(16px); }
@@ -713,13 +756,14 @@
     <section class="hero" id="hero">
       <div>
         <span class="kicker"><svg aria-hidden="true"><use href="#i-ban"/></svg> Запрещённые модификации</span>
-        <h1>Играй честно — иначе не играй</h1>
+        <h1>Играй честно — ванильных механик достаточно</h1>
         <p class="lede">Это первая страница правил <b>Sunrise Worlds SMP</b>: полный список клиентских модов, аддонов, ресурспаков и макросов, которые дают преимущество над другими игроками. Всё, что не перечислено здесь как запрещённое, <b>не автоматически разрешено</b> — если мод меняет баланс, реакцию или видимость мира, он под запретом.</p>
         <div class="meta">
           <span class="pill">Обновлено: <code>04.11.2026</code></span>
           <span class="pill">Версия правил: <code>1.0</code></span>
-          <span class="pill todo">IP: заполнить</span>
-          <span class="pill todo">Discord: заполнить</span>
+          <button class="pill" id="ip" type="button" data-ip="195.58.152.27:25596">
+            IP: <code>195.58.152.27:25596</code> <span class="hint">нажми, чтобы скопировать</span>
+          </button>
         </div>
       </div>
       <aside class="torch-card reveal">
@@ -913,7 +957,7 @@
         </ul>
       </div>
 
-      <div class="empty" id="noresult" hidden>Ничего не найдено. Если не уверен, что конкретный мод разрешён — спроси в Discord до установки.</div>
+      <div class="empty" id="noresult" hidden>Ничего не найдено. Если не уверен, что конкретный мод разрешён, — спроси администратора в игре до установки.</div>
     </section>
 
     <section id="allowed">
@@ -942,7 +986,7 @@
       <hr class="rule">
       <div class="table-wrap">
         <table>
-          <caption class="visually-hidden" hidden>Наказания за использование запрещённых модификаций</caption>
+          <caption class="visually-hidden">Наказания за использование запрещённых модификаций</caption>
           <thead>
             <tr><th scope="col">Ситуация</th><th scope="col">Первое нарушение</th><th scope="col">Повторно</th></tr>
           </thead>
@@ -971,7 +1015,7 @@
         <li><svg aria-hidden="true"><use href="#i-shield"/></svg><span><b>Разборы реплеев и логов</b> по жалобам: мы смотрим запись боя, а не верим на слово.</span></li>
         <li><svg aria-hidden="true"><use href="#i-shield"/></svg><span><b>Жалобы игроков</b> с видео, таймкодом и ником рассматриваются в первую очередь.</span></li>
         <li><svg aria-hidden="true"><use href="#i-shield"/></svg><span><b>Выборочные проверки</b> suspicious-игроков: скриншоты списка модов и папки <code>mods</code>.</span></li>
-        <li><svg aria-hidden="true"><use href="#i-shield"/></svg><span><b>Апелляция</b> подаётся в Discord; за ложный донос наказание не выдаём — сначала разбираемся.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-shield"/></svg><span><b>Апелляция</b> подаётся администратору в игре; за ложный донос наказание не выдаём — сначала разбираемся.</span></li>
       </ul>
     </section>
 
@@ -985,7 +1029,7 @@
       <p>Правила обновляются без предупреждения. Проверяй эту страницу перед установкой нового мода.</p>
     </div>
     <div>
-      <p>IP: <span class="pill todo">заполнить</span> · Discord: <a href="#discord">заполнить</a></p>
+      <p>IP: <code>195.58.152.27:25596</code></p>
       <p>© 2026 Sunrise Worlds. Список запрещённых модификаций — раздел 1.</p>
     </div>
   </div>
@@ -1026,6 +1070,54 @@
   }
 
   input.addEventListener('input', apply);
+
+  var ipBtn = document.getElementById('ip');
+  var hint = ipBtn.querySelector('.hint');
+  var ip = ipBtn.dataset.ip;
+  var resetTimer;
+
+  function fallbackCopy(text) {
+    var area = document.createElement('textarea');
+    area.value = text;
+    area.setAttribute('readonly', '');
+    area.style.position = 'fixed';
+    area.style.opacity = '0';
+    document.body.appendChild(area);
+    area.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(area);
+    return ok;
+  }
+
+  ipBtn.addEventListener('click', function () {
+    function show(ok) {
+      if (ok) {
+        hint.textContent = 'IP скопирован';
+        ipBtn.classList.add('copied');
+      } else {
+        var code = ipBtn.querySelector('code');
+        var range = document.createRange();
+        range.selectNodeContents(code);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        hint.textContent = 'выделил IP — нажми Ctrl+C';
+      }
+
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(function () {
+        hint.textContent = 'нажми, чтобы скопировать';
+        ipBtn.classList.remove('copied');
+      }, 2400);
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(ip).then(function () { show(true); }, function () { show(fallbackCopy(ip)); });
+    } else {
+      show(fallbackCopy(ip));
+    }
+  });
 
   document.addEventListener('keydown', function (e) {
     if (e.key === '/' && document.activeElement !== input) {
