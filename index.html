@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unrise Worlds — запрещённые модификации | Правила SMP</title>
+<meta name="description" content="Список запрещённых клиентских модификаций для SMP-сервера Unrise Worlds: читы, Freecam, Fullbright, Xray, автокликеры, трекеры игроков и автоматизация. Что разрешено и какие наказания.">
+<meta name="theme-color" content="#070b10">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Unrise Worlds — запрещённые модификации">
+<meta property="og:description" content="Правила SMP: какие клиентские моды запрещены и почему.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a1017'/><rect x='6' y='6' width='20' height='20' rx='4' fill='%2334d399'/><rect x='11' y='11' width='10' height='10' rx='2' fill='%230a1017'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  @property --glow-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+
+  :root {
+    --bg: #070b10;
+    --bg-2: #0c131b;
+    --ink: #e9f1f5;
+    --muted: #93a8b6;
+    --line: rgba(151, 196, 214, .14);
+    --panel: rgba(255, 255, 255, .035);
+    --panel-2: rgba(255, 255, 255, .06);
+    --emerald: #34d399;
+    --emerald-deep: #0f766e;
+    --gold: #f3c15d;
+    --danger: #fb6f6f;
+    --amber: #f7b955;
+    --azure: #6fb3ff;
+    --radius: 18px;
+    --shadow: 0 24px 60px -30px rgba(0, 0, 0, .85);
+    --head: "Unbounded", "Segoe UI", system-ui, sans-serif;
+    --body: "Manrope", "Segoe UI", system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; scroll-padding-top: 86px; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.62;
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- фон: свечение + блочная сетка ---- */
+  body::before,
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::before {
+    background:
+      radial-gradient(900px 620px at 12% -8%, rgba(52, 211, 153, .22), transparent 60%),
+      radial-gradient(760px 560px at 92% 4%, rgba(243, 193, 93, .14), transparent 62%),
+      radial-gradient(1100px 800px at 50% 110%, rgba(111, 179, 255, .12), transparent 65%),
+      linear-gradient(180deg, var(--bg), var(--bg-2) 55%, var(--bg));
+  }
+
+  body::after {
+    background-image:
+      linear-gradient(rgba(151, 196, 214, .05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(151, 196, 214, .05) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(circle at 50% 22%, #000 12%, transparent 72%);
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    width: min(1180px, 92vw);
+    margin-inline: auto;
+  }
+
+  /* ---- шапка ---- */
+  .top {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    backdrop-filter: blur(14px);
+    background: linear-gradient(180deg, rgba(7, 11, 16, .94), rgba(7, 11, 16, .68));
+    border-bottom: 1px solid var(--line);
+  }
+
+  .top-in {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 13px 0;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .cube {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: linear-gradient(145deg, var(--emerald), var(--emerald-deep));
+    box-shadow: 0 0 22px rgba(52, 211, 153, .5);
+    flex: none;
+  }
+
+  .cube::after {
+    content: "";
+    position: absolute;
+    inset: 9px;
+    border-radius: 4px;
+    background: var(--bg);
+  }
+
+  .brand b {
+    font-family: var(--head);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+
+  .brand span {
+    display: block;
+    font-size: 11.5px;
+    color: var(--muted);
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .nav {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+    flex-wrap: wrap;
+  }
+
+  .nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: .18s color, .18s background, .18s transform;
+  }
+
+  .nav a:hover {
+    color: var(--ink);
+    background: var(--panel-2);
+    transform: translateY(-1px);
+  }
+
+  /* ---- герой ---- */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.35fr .65fr;
+    gap: 34px;
+    align-items: end;
+    padding: 74px 0 44px;
+  }
+
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--emerald);
+    padding: 7px 14px;
+    border: 1px solid rgba(52, 211, 153, .34);
+    border-radius: 999px;
+    background: rgba(52, 211, 153, .08);
+  }
+
+  .kicker svg { width: 15px; height: 15px; }
+
+  h1 {
+    font-family: var(--head);
+    font-weight: 900;
+    font-size: clamp(34px, 5.4vw, 60px);
+    line-height: 1.06;
+    letter-spacing: -.02em;
+    margin: 20px 0 14px;
+    background: linear-gradient(96deg, #ffffff 10%, var(--emerald) 58%, var(--gold) 96%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .lede {
+    font-size: clamp(15px, 1.7vw, 18px);
+    color: var(--muted);
+    max-width: 62ch;
+    margin: 0;
+  }
+
+  .lede b { color: var(--ink); font-weight: 600; }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 26px;
+  }
+
+  .pill {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--muted);
+    padding: 7px 13px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--panel);
+  }
+
+  .pill code { font: 600 12.5px/1 ui-monospace, "Cascadia Mono", monospace; color: var(--ink); }
+
+  .pill.todo {
+    color: var(--amber);
+    border-color: rgba(247, 185, 85, .38);
+    background: rgba(247, 185, 85, .08);
+  }
+
+  /* ---- карточка факела ---- */
+  .torch-card {
+    position: relative;
+    overflow: hidden;
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: linear-gradient(170deg, rgba(243, 193, 93, .12), rgba(255, 255, 255, .03) 46%);
+    box-shadow: var(--shadow);
+  }
+
+  .torch-card::after {
+    content: "";
+    position: absolute;
+    right: -60px;
+    top: -70px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(243, 193, 93, .4), transparent 66%);
+    animation: breathe 6s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    50% { transform: scale(1.18); opacity: .78; }
+  }
+
+  .torch-card h2 {
+    font-family: var(--head);
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 10px;
+    letter-spacing: .01em;
+  }
+
+  .torch-card p { margin: 0; font-size: 14px; color: var(--muted); position: relative; }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 18px;
+    position: relative;
+  }
+
+  .stat b {
+    display: block;
+    font-family: var(--head);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--emerald);
+    line-height: 1.1;
+  }
+
+  .stat span { font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+
+  /* ---- секции ---- */
+  section { padding: 30px 0; }
+
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+
+  h2.title {
+    font-family: var(--head);
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 700;
+    letter-spacing: -.01em;
+    margin: 0;
+  }
+
+  .sec-head p { margin: 0; color: var(--muted); font-size: 14.5px; }
+
+  .rule {
+    height: 1px;
+    border: 0;
+    margin: 18px 0 26px;
+    background: linear-gradient(90deg, rgba(52, 211, 153, .5), var(--line) 42%, transparent);
+  }
+
+  /* ---- спотлайт Freecam / Fullbright ---- */
+  .spotlight {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 18px;
+    margin-top: 22px;
+  }
+
+  .spot {
+    position: relative;
+    overflow: hidden;
+    padding: 26px;
+    border-radius: var(--radius);
+    border: 1px solid rgba(251, 111, 111, .3);
+    background: linear-gradient(165deg, rgba(251, 111, 111, .13), rgba(255, 255, 255, .028) 52%);
+    box-shadow: var(--shadow);
+  }
+
+  .spot h3 {
+    font-family: var(--head);
+    font-size: 20px;
+    font-weight: 700;
+    margin: 14px 0 8px;
+  }
+
+  .spot p { margin: 0; color: #cfdde5; font-size: 14.5px; }
+
+  .spot .tag {
+    display: inline-block;
+    margin-top: 16px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--danger);
+  }
+
+  .spot svg.lead {
+    width: 26px;
+    height: 26px;
+    color: var(--danger);
+    filter: drop-shadow(0 0 12px rgba(251, 111, 111, .55));
+  }
+
+  /* ---- панель поиска ---- */
+  .toolbar {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--panel);
+    margin-bottom: 26px;
+  }
+
+  .field {
+    position: relative;
+    flex: 1 1 280px;
+    min-width: 240px;
+  }
+
+  .field svg {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 17px;
+    height: 17px;
+    color: var(--muted);
+  }
+
+  .field input {
+    width: 100%;
+    font: 500 14.5px/1 var(--body);
+    color: var(--ink);
+    padding: 13px 14px 13px 40px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: rgba(0, 0, 0, .3);
+    outline: none;
+    transition: .2s border-color, .2s box-shadow;
+  }
+
+  .field input::placeholder { color: #6f8492; }
+
+  .field input:focus {
+    border-color: rgba(52, 211, 153, .6);
+    box-shadow: 0 0 0 4px rgba(52, 211, 153, .12);
+  }
+
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .chip {
+    font: 600 12.5px/1 var(--body);
+    color: var(--muted);
+    text-decoration: none;
+    padding: 9px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: rgba(0, 0, 0, .22);
+    transition: .18s color, .18s border-color, .18s transform;
+  }
+
+  .chip:hover {
+    color: var(--emerald);
+    border-color: rgba(52, 211, 153, .5);
+    transform: translateY(-1px);
+  }
+
+  .counter { font-size: 13px; color: var(--muted); white-space: nowrap; margin-left: auto; }
+  .counter b { color: var(--ink); }
+
+  /* ---- категории ---- */
+  .cat { margin-bottom: 34px; }
+
+  .cat-head {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 16px;
+  }
+
+  .cat-icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    flex: none;
+    border-radius: 12px;
+    border: 1px solid rgba(52, 211, 153, .3);
+    background: linear-gradient(150deg, rgba(52, 211, 153, .16), rgba(255, 255, 255, .03));
+    color: var(--emerald);
+  }
+
+  .cat-icon svg { width: 21px; height: 21px; }
+
+  .cat-head h3 {
+    font-family: var(--head);
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .cat-head p { margin: 2px 0 0; font-size: 13.5px; color: var(--muted); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 12px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .mod {
+    display: flex;
+    gap: 13px;
+    align-items: flex-start;
+    padding: 16px 17px;
+    border: 1px solid var(--line);
+    border-radius: 15px;
+    background: linear-gradient(168deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .018));
+    transition: .2s transform, .2s border-color, .2s box-shadow;
+  }
+
+  .mod:hover {
+    transform: translateY(-3px);
+    border-color: rgba(52, 211, 153, .34);
+    box-shadow: 0 18px 34px -22px rgba(0, 0, 0, .9);
+  }
+
+  .mod > div { min-width: 0; }
+
+  .mod h4 {
+    font-size: 14.5px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .mod p { margin: 0; font-size: 13.4px; color: var(--muted); }
+
+  .mark {
+    width: 26px;
+    height: 26px;
+    flex: none;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    border: 1px solid rgba(251, 111, 111, .34);
+    background: rgba(251, 111, 111, .12);
+    color: var(--danger);
+    margin-top: 1px;
+  }
+
+  .mark svg { width: 15px; height: 15px; }
+
+  .sev {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  .sev.instant { color: #ffb1b1; background: rgba(251, 111, 111, .16); border: 1px solid rgba(251, 111, 111, .4); }
+  .sev.after { color: #ffd79a; background: rgba(247, 185, 85, .14); border: 1px solid rgba(247, 185, 85, .36); }
+  .sev.case { color: #b8d8ff; background: rgba(111, 179, 255, .13); border: 1px solid rgba(111, 179, 255, .32); }
+
+  .empty {
+    padding: 26px;
+    text-align: center;
+    color: var(--muted);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+    font-size: 14.5px;
+  }
+
+  [hidden] { display: none !important; }
+
+  /* ---- разрешено ---- */
+  .allowed {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .allowed li {
+    display: flex;
+    gap: 12px;
+    padding: 15px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(52, 211, 153, .22);
+    background: linear-gradient(168deg, rgba(52, 211, 153, .1), rgba(255, 255, 255, .02));
+    font-size: 13.6px;
+    color: #cfe6dc;
+  }
+
+  .allowed svg { width: 19px; height: 19px; flex: none; color: var(--emerald); margin-top: 2px; }
+  .allowed b { color: var(--ink); }
+
+  /* ---- наказания ---- */
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--panel);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 560px;
+    font-size: 14px;
+  }
+
+  th, td {
+    padding: 14px 17px;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+
+  th {
+    font-family: var(--head);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: rgba(0, 0, 0, .26);
+  }
+
+  tr:last-child td { border-bottom: 0; }
+  td b { color: var(--emerald); font-weight: 700; }
+  td.strong { color: var(--ink); font-weight: 600; }
+
+  .note {
+    display: flex;
+    gap: 13px;
+    padding: 17px 19px;
+    border-radius: 14px;
+    border: 1px solid rgba(247, 185, 85, .3);
+    background: rgba(247, 185, 85, .08);
+    font-size: 14px;
+    color: #e6dcc8;
+    margin-top: 18px;
+  }
+
+  .note svg { width: 20px; height: 20px; flex: none; color: var(--amber); }
+
+  /* ---- футер ---- */
+  footer {
+    margin-top: 40px;
+    border-top: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(0, 0, 0, .2), transparent);
+  }
+
+  .foot-in {
+    display: flex;
+    gap: 26px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 34px 0 44px;
+    font-size: 13.5px;
+    color: var(--muted);
+  }
+
+  .foot-in b { font-family: var(--head); font-size: 14px; color: var(--ink); letter-spacing: .04em; }
+  .foot-in a { color: var(--emerald); text-decoration: none; }
+  .foot-in a:hover { text-decoration: underline; }
+
+  /* ---- анимация появления ---- */
+  .reveal { opacity: 0; transform: translateY(16px); }
+  .reveal.in { opacity: 1; transform: none; transition: .55s ease; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; }
+    .torch-card::after { animation: none; }
+    .mod, .chip, .nav a { transition: none; }
+  }
+
+  @media (max-width: 940px) {
+    .hero { grid-template-columns: 1fr; gap: 26px; padding-top: 48px; }
+    .nav { display: none; }
+    .counter { margin-left: 0; }
+  }
+
+  @media (max-width: 520px) {
+    body { font-size: 15px; }
+    .grid { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .toolbar { padding: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <g id="s" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></g>
+  </defs>
+  <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-sword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18.5 3.5h2v2l-8 8-2-2z"/><path d="M8 14l2 2-4.5 4.5L3 18.5z"/><path d="M14 8l2 2"/></symbol>
+  <symbol id="i-steps" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h5v-4h5v-4h5V7h3"/></symbol>
+  <symbol id="i-radar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l7-6"/></symbol>
+  <symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4"/><path d="M9 14h.01M15 14h.01"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 19h2"/></symbol>
+  <symbol id="i-cube" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+  <symbol id="i-ban" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M6.5 17.5l11-11"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l8.5 16.5H3.5z"/><path d="M12 9.5v4.5M12 17.5h.01"/></symbol>
+  <symbol id="i-torch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5c2.8 3.6 4.5 4.8 4.5 7.8A4.5 4.5 0 0 1 12 14.8a4.5 4.5 0 0 1-4.5-4.5c0-1.7.8-2.6 1.8-3.5.2 1.6 1 2.4 1.9 2.4 0-3.3.3-4.8.8-6.7z"/><path d="M11 15h2v6.5h-2z"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#top">
+      <span class="cube" aria-hidden="true"></span>
+      <span><b>Unrise Worlds</b><span>SMP · Правила</span></span>
+    </a>
+    <nav class="nav" aria-label="Разделы правил">
+      <a href="#spotlight">Главное</a>
+      <a href="#banned">Запрещено</a>
+      <a href="#allowed">Разрешено</a>
+      <a href="#penalty">Наказания</a>
+      <a href="#check">Проверки</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap">
+
+    <section class="hero" id="hero">
+      <div>
+        <span class="kicker"><svg aria-hidden="true"><use href="#i-ban"/></svg> Запрещённые модификации</span>
+        <h1>Играй честно — иначе не играй</h1>
+        <p class="lede">Это первая страница правил <b>Unrise Worlds SMP</b>: полный список клиентских модов, аддонов, ресурспаков и макросов, которые дают преимущество над другими игроками. Всё, что не перечислено здесь как запрещённое, <b>не автоматически разрешено</b> — если мод меняет баланс, реакцию или видимость мира, он под запретом.</p>
+        <div class="meta">
+          <span class="pill">Обновлено: <code>04.11.2026</code></span>
+          <span class="pill">Версия правил: <code>1.0</code></span>
+          <span class="pill todo">IP: заполнить</span>
+          <span class="pill todo">Discord: заполнить</span>
+        </div>
+      </div>
+      <aside class="torch-card reveal">
+        <h2><svg style="width:18px;height:18px;vertical-align:-3px;color:var(--gold)" aria-hidden="true"><use href="#i-torch"/></svg> Почему так строго</h2>
+        <p>SMP живёт на доверии: один игрок с Freecam или автокликером обесценивает чужие недели копа, фарма и постройки базы. Поэтому список читов открыт и конкретен — чтобы не было споров «а это можно?».</p>
+        <div class="stats">
+          <div class="stat"><b id="stat-total">—</b><span>запрещено</span></div>
+          <div class="stat"><b>7</b><span>категорий</span></div>
+          <div class="stat"><b>до&nbsp;перм.</b><span>наказание</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="spotlight">
+      <div class="sec-head">
+        <h2 class="title">Два мода, о которых спрашивают чаще всего</h2>
+        <p>Их запрещаем явно и без исключений.</p>
+      </div>
+      <hr class="rule">
+      <div class="spotlight">
+        <article class="spot reveal">
+          <svg class="lead" aria-hidden="true"><use href="#i-eye"/></svg>
+          <h3>Freecam</h3>
+          <p>Камера проходит сквозь блоки, пока персонаж стоит на месте. Так разведывают чужие базы, смотрят, что у тебя в сундуках, и фармят опыл, отсутствуя на сервере. Это отдельный режим spectator-обмана: запрещён в любом виде — модом, клиентом или функцией внутри мод-пака.</p>
+          <span class="tag">Бан после первого подтверждения</span>
+        </article>
+        <article class="spot reveal">
+          <svg class="lead" aria-hidden="true"><use href="#i-eye"/></svg>
+          <h3>Fullbright / Gamma / Night Vision</h3>
+          <p>Максимальная яркость вместо света: ты видишь в полной темноте очертания мобов, игроков и руду, а обычный игрок — нет. Сюда же относятся гамма-моды, шейдер-пресеты с нулевой тёмной точкой и ресурспаки с «no fog» для пещер. Разрешены только ванильные настройки яркости и собственные факелы.</p>
+          <span class="tag">Бан после первого подтверждения</span>
+        </article>
+      </div>
+    </section>
+
+    <section id="banned">
+      <div class="sec-head">
+        <h2 class="title">Список запрещённых модификаций</h2>
+        <p>Ищи по названию или функции.</p>
+      </div>
+      <hr class="rule">
+
+      <div class="toolbar">
+        <label class="field">
+          <svg aria-hidden="true"><use href="#i-search"/></svg>
+          <input id="q" type="search" placeholder="Например: reach, xray, автокликер, Litematica…" autocomplete="off" aria-label="Поиск по списку запрещённых модификаций">
+        </label>
+        <div class="chips">
+          <a class="chip" href="#c-clients">Чит-клиенты</a>
+          <a class="chip" href="#c-view">Обзор</a>
+          <a class="chip" href="#c-combat">Бой</a>
+          <a class="chip" href="#c-move">Движение</a>
+          <a class="chip" href="#c-info">Инфо</a>
+          <a class="chip" href="#c-auto">Авто</a>
+          <a class="chip" href="#c-mobile">Мобильные</a>
+        </div>
+        <span class="counter">Показано: <b id="found">все</b></span>
+      </div>
+
+      <div class="cat" id="c-clients">
+        <div class="cat-head">
+          <span class="cat-icon"><svg aria-hidden="true"><use href="#i-cube"/></svg></span>
+          <div>
+            <h3>Чит-клиенты и чит-паки</h3>
+            <p>Собранность «всё в одном»: ставить такой клиент — нарушить сразу несколько пунктов.</p>
+          </div>
+        </div>
+        <ul class="grid">
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Wurst Client <span class="sev instant">бан сразу</span></h4><p>Встроенные kill aura, freecam, xray, no-click и авто-строка. Любой запуск на сервере = нарушение.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Meteor Client <span class="sev instant">бан сразу</span></h4><p>Трейсеры, auto-miner, reach, scaffold и скрипты на Lua — всё под запретом.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Impact / Skid <span class="sev instant">бан сразу</span></h4><p>Base-scanner, ESP, авто-баритон и «удобные» обходные функции для PvP.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>LiquidBounce, Naven, Blackway <span class="sev instant">бан сразу</span></h4><p>Клиенты со скриптовым боем, таймингами и автоматическими комбинациями ударов.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Платные приват-читы (Vape, Reaper, DerpStonk и аналоги) <span class="sev instant">бан сразу</span></h4><p>Продаются как «невидимые для античита». Мы считаем это отягчающим обстоятельством.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Baritone <span class="sev instant">бан сразу</span></h4><p>Бот-маршрутизатор: сам копает, сам идёт на руду, сам фармит. Это автопилот, а не навигатор.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Tweakeroo и набор Masa-модов <span class="sev instant">бан сразу</span></h4><p>Freecam, auto-totem, block-swapper, fast-placement — под запретом целиком, а не поодиночке.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Аддоны к косметическим клиентам (LabyMod и др.) <span class="sev after">бан после предупреждения</span></h4><p>Сам клиент не запрещён, но сторонние аддоны с трейсерами, xray и авто-функциями — запрещены.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Lunar и Badlion <span class="sev case">зависит от настроек</span></h4><p>Клиенты разрешены. Отключи в них autoclicker, macros, toggle-sprint-чит, xray-тумблеры и «hit color»-обманки.</p></div></li>
+        </ul>
+      </div>
+
+      <div class="cat" id="c-view">
+        <div class="cat-head">
+          <span class="cat-icon"><svg aria-hidden="true"><use href="#i-eye"/></svg></span>
+          <div>
+            <h3>Обзор, рентген и видимость</h3>
+            <p>Всё, что показывает то, что в ванилле скрыто туманом или блоками.</p>
+          </div>
+        </div>
+        <ul class="grid">
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Freecam / Spectator-камера <span class="sev instant">бан сразу</span></h4><p>Свободная камера сквозь блоки, тело игрока стоит на месте. Разведка баз и контроль чужих сундуков.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Fullbright, Gamma, Night Vision <span class="sev instant">бан сразу</span></h4><p>Яркость выше ванильного максимума: видно мобы и руда в абсолютной темноте.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Xray (моды и ресурспаки) <span class="sev instant">бан сразу</span></h4><p>Прозрачный камень, подсветка алмазов, «видимые» жилы руды — любой вариант, включая паки с названиями-обманками.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Шейдер-пресеты с рентгеном <span class="sev instant">бан сразу</span></h4><p>Iris/OptiFine-шейдеры, вырезающие блоки, убирающие туман или подсвечивающие сущности.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>NoClip / Phase / GhostBlock <span class="sev instant">бан сразу</span></h4><p>Проход или «сквозной» взгляд через стены, застревание в блоках и выход из них.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Block-IDs и NBT-инспекторы реального времени <span class="sev case">зависит от настроек</span></h4><p>Показывают содержимое чужих контейнеров и скрытые состояния блоков. Смотреть можно только свои.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>«Убрать туман/тени» и see-through-паки <span class="sev after">бан после предупреждения</span></h4><p>Пакеты, где листва, стены или вода становятся прозрачными для обзора территории.</p></div></li>
+        </ul>
+      </div>
+
+      <div class="cat" id="c-combat">
+        <div class="cat-head">
+          <span class="cat-icon"><svg aria-hidden="true"><use href="#i-sword"/></svg></span>
+          <div>
+            <h3>Бой и игровая реакция</h3>
+            <p>Всё, что бьёт, целится или кликает вместо тебя.</p>
+          </div>
+        </div>
+        <ul class="grid">
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>KillAura / TargetBot / TriggerBot <span class="sev instant">бан сразу</span></h4><p>Автоматическая атака всех вокруг и удар «в стену» по цели.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Reach и расширенные хитбоксы <span class="sev instant">бан сразу</span></h4><p>Удар дальше ванильных 3 блоков и «раздутая» модель противника.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Autoclicker, CPS-макросы, авто-спринт-клик <span class="sev instant">бан сразу</span></h4><p>Программы (AutoHotkey, мышь-софт, макросы в клиенте) и моды с фиксированным CPS.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>AutoTotem / AutoEat / AutoShield <span class="sev instant">бан сразу</span></h4><p>Реакция на 0 мс: тотем и еда вставляются раньше, чем успевает человек.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Scaffold / AutoBlock / Telly-bridge <span class="sev instant">бан сразу</span></h4><p>Автостройка под ногами и блокирование ударов без участия игрока.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Criticals / FastPlace / AutoProjectile <span class="sev after">бан после предупреждения</span></h4><p>Авто-криты, ускоренная установка блоков и автострелы/снежки по расписанию.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>AutoBow / AutoRod / AutoFish <span class="sev instant">бан сразу</span></h4><p>Забрасывание удочки и стрельба без нажатий: AFK-фермы опыта и лута на автоматике.</p></div></li>
+        </ul>
+      </div>
+
+      <div class="cat" id="c-move">
+        <div class="cat-head">
+          <span class="cat-icon"><svg aria-hidden="true"><use href="#i-steps"/></svg></span>
+          <div>
+            <h3>Движение и физика</h3>
+            <p>Передвижение, которое сервер не разрешает ванильными механиками.</p>
+          </div>
+        </div>
+        <ul class="grid">
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Fly / Jetpack / Elytra-boost <span class="sev instant">бан сразу</span></h4><p>Полёт без элитры, ускорения в воздухе и «реактивные» моды.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Speed / Sprint-boost / Timer <span class="sev instant">бан сразу</span></h4><p>Бег быстрее ванильного, ускорение тиков клиента и обгон таймингов сервера.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Spider / Wall-climb / Step <span class="sev instant">бан сразу</span></h4><p>Подъём по стенам и переступка через блоки выше разрешённой высоты.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Jesus / Walk-on-water / NoSlow <span class="sev after">бан после предупреждения</span></h4><p>Ходьба по воде и лавам, отсутствие замедления при ударах и еде.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>NoFall / Anti-Void <span class="sev instant">бан сразу</span></h4><p>Отрицание урона с высоты и страховка от падения в пустоту.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Teleport / Ender-surge / Blink <span class="sev instant">бан сразу</span></h4><p>Скачки по позициям, «моргание» для обхода античита и телепорты без эндер-перла.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>AutoJump / ToggleSprint-Stand <span class="sev case">зависит от настроек</span></h4><p>Разрешаем только если функция не даёт преимущества в PvP-скорости и не подменяет клики.</p></div></li>
+        </ul>
+      </div>
+
+      <div class="cat" id="c-info">
+        <div class="cat-head">
+          <span class="cat-icon"><svg aria-hidden="true"><use href="#i-radar"/></svg></span>
+          <div>
+            <h3>Информация и трекинг</h3>
+            <p>Данные о мире и игроках, которых в клиенте быть не должно.</p>
+          </div>
+        </div>
+        <ul class="grid">
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Tracers / ESP / Player Radar <span class="sev instant">бан сразу</span></h4><p>Линии и подсветка игроков сквозь стены, цвета по дистанции и оружию.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Entity-mob radar на миникарте <span class="sev instant">бан сразу</span></h4><p>Xaero's/VoxelMap с точками мобов и игроков: радар и player-трекинг выключить полностью.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Structure- и stronghold-поиск <span class="sev instant">бан сразу</span></h4><p>Поиск крепостей, храмов, городов и эндер-порталов по координатам из модов.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Seed finder / Xray-сканеры чанков <span class="sev instant">бан сразу</span></h4><p>Определение сида, слайм-чанков и карт распределения руды.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>DPS-счётчики и damage meter <span class="sev after">бан после предупреждения</span></h4><p>Точные цифры урона и скорборды по времени на клик: скрытая информация о механиках боя.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>DeathPOI / Player locator / «Где кто» <span class="sev instant">бан сразу</span></h4><p>Моды, показывающие точки смерти и местоположение других игроков.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Shulker- и chest-preview <span class="sev instant">бан сразу</span></h4><p>Просмотр содержимого чужих контейнеров без открытия блока.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>JEI/REI/EMI xray-плагины <span class="sev instant">бан сразу</span></h4><p>Сами книги рецептов разрешены, их «ore highlight» и «xray»-надстройки — нет.</p></div></li>
+        </ul>
+      </div>
+
+      <div class="cat" id="c-auto">
+        <div class="cat-head">
+          <span class="cat-icon"><svg aria-hidden="true"><use href="#i-bot"/></svg></span>
+          <div>
+            <h3>Автоматизация и постройки</h3>
+            <p>Когда мод играет вместо тебя, пока ты отсутствуешь.</p>
+          </div>
+        </div>
+        <ul class="grid">
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Litematica Printer / auto-build <span class="sev instant">бан сразу</span></h4><p>Автоматическая установка блоков по схеме, ghost-block и «строим за тебя».</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Auto-mine / Auto-excavate / Vein-miner <span class="sev instant">бан сразу</span></h4><p>Массовая добыча и раскопка области: так работают фермы ресурсов, пока игрока нет на сервере.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>AFK-боты, auto-reconnect, AutoAuth <span class="sev instant">бан сразу</span></h4><p>Моды и скрипты, которые заходят на сервер, авторизуются и стоят вместо тебя.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Path-bot / Auto-walk / Follow <span class="sev instant">бан сразу</span></h4><p>Самостоятельная навигация игрока и следование за другими без нажатий.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Дюпы на макросах (TNT-, redstone-, pearl-dupe) <span class="sev instant">бан сразу</span></h4><p>Скрипты на timed-кликах для клонирования предметов. Это не баф — это кража ресурсов у сервера.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Auto-sell / Auto-sort / инвентарь-боты <span class="sev after">бан после предупреждения</span></h4><p>Автоматическая сортировка сундуков и продажа стаком в один клик-таймер.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Схемы чужих построек <span class="sev case">зависит от настроек</span></h4><p>Просмотр схем — по договорённости с администрацией. Скачивание чужих баз как схемы — нарушение.</p></div></li>
+        </ul>
+      </div>
+
+      <div class="cat" id="c-mobile">
+        <div class="cat-head">
+          <span class="cat-icon"><svg aria-hidden="true"><use href="#i-phone"/></svg></span>
+          <div>
+            <h3>Мобильные и сторонние клиенты</h3>
+            <p>Телефон — не повод для исключений.</p>
+          </div>
+        </div>
+        <ul class="grid">
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Toolbox, BlockBit и подобные мод-лоадеры <span class="sev instant">бан сразу</span></h4><p>Мод-лоадеры с магазинами читов: xray, gamma, freecam, fly-плагины ставятся в один тап.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>PixelGun, Rootplay и аналоги <span class="sev instant">бан сразу</span></h4><p>Клиенты со встроенной чит-панелью (kill aura, reach, xray, auto-click).</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>«Gamma / Night Vision» для мобильных <span class="sev instant">бан сразу</span></h4><p>Моды яркости и аддоны «see in the dark» — тот же fullbright, просто на Android/iOS.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Xray-паки для Bedrock/Java-маркетплейсов <span class="sev instant">бан сразу</span></h4><p>Ресурспаки со скрытыми блоками и подсветкой руды, включая «прозрачные» карты.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Macro-серверы и скрипты на телефоне <span class="sev after">бан после предупреждения</span></h4><p>Встроенные макросы клиентов и автокликеры уровня ОС. Играй пальцами как все.</p></div></li>
+        </ul>
+      </div>
+
+      <div class="empty" id="noresult" hidden>Ничего не найдено. Если не уверен, что конкретный мод разрешён — спроси в Discord до установки.</div>
+    </section>
+
+    <section id="allowed">
+      <div class="sec-head">
+        <h2 class="title">Что можно</h2>
+        <p>Разрешено ровно то, что не даёт преимущества.</p>
+      </div>
+      <hr class="rule">
+      <ul class="allowed">
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>Оптимизация:</b> Sodium, Lithium, Starlight/Phosphor, FerriteCore и OptiFine — без рентген-пресетов и отключённой темноты.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>Шейдеры:</b> Iris + обычные шейдеры с ванильной яркостью. Пресеты «x-ray», «no fog», «cave mode» запрещены.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>JEI / REI / EMI:</b> только рецепты и свои предметы. Ни один ore-плагин или сканер мира.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>Клиенты:</b> Lunar и Badlion — после проверки, что там нет макросов, автокликера и чит-тумблеров.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>Миникарта:</b> Xaero's / VoxelMap только со своей позицией и границами чанков. Радар мобов, точки игроков и любой трекинг — выключить.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>Голосовой чат и косметика:</b> Simple Voice Chat, скин-слой, анимации, HUD-перемещения, крупные шрифты.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>Удобство без обмана:</b> сортировка своего инвентаря, авто-заполнение сундука при открытии, отключение тревожных звуков.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>Свои ресурспаки,</b> где меняются только текстуры, звуки и интерфейс — без прозрачных блоков и подсветки сущностей.</span></li>
+      </ul>
+    </section>
+
+    <section id="penalty">
+      <div class="sec-head">
+        <h2 class="title">Наказания</h2>
+        <p>Администрация вправе ужесточить наказание при отягчающих.</p>
+      </div>
+      <hr class="rule">
+      <div class="table-wrap">
+        <table>
+          <caption class="visually-hidden" hidden>Наказания за использование запрещённых модификаций</caption>
+          <thead>
+            <tr><th scope="col">Ситуация</th><th scope="col">Первое нарушение</th><th scope="col">Повторно</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="strong">Чит-клиент, KillAura, Reach, Fly, Freecam, Fullbright, Xray, автостройка</td><td><b>Бан на 30 дней</b></td><td><b>Перманентный бан</b></td></tr>
+            <tr><td class="strong">Radar мобов, трекер игроков, damage meter, «спорные» QoL-моды</td><td><b>Предупреждение</b> + требование удалить мод</td><td><b>Бан на 14 дней</b></td></tr>
+            <tr><td class="strong">AFK-боты, дюпы на макросах, обход античита</td><td><b>Бан на 60 дней</b> + откат предметов</td><td><b>Перманентный бан</b></td></tr>
+            <tr><td class="strong">Реклама читов и продажа подписок другим игрокам</td><td><b>Перманентный бан</b> аккаунта и его альт-аккаунтов</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note">
+        <svg aria-hidden="true"><use href="#i-warn"/></svg>
+        <span>Ссылка на «все так играют», «я не знал, что это чит», «мод был в сборке, я не проверял» не освобождает от ответственности. Запрещённый мод достаточно просто иметь в папке <code>mods</code> и зайти на сервер.</span>
+      </div>
+    </section>
+
+    <section id="check">
+      <div class="sec-head">
+        <h2 class="title">Как мы проверяем</h2>
+        <p>Чтобы не банить случайно — и не закрывать глаза на чит.</p>
+      </div>
+      <hr class="rule">
+      <ul class="allowed">
+        <li><svg aria-hidden="true"><use href="#i-shield"/></svg><span><b>Античит в реальном времени</b> анализирует тайминги, движения и дистанцию ударов, а не имена модов.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-shield"/></svg><span><b>Разборы реплеев и логов</b> по жалобам: мы смотрим запись боя, а не верим на слово.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-shield"/></svg><span><b>Жалобы игроков</b> с видео, таймкодом и ником рассматриваются в первую очередь.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-shield"/></svg><span><b>Выборочные проверки</b> suspicious-игроков: скриншоты списка модов и папки <code>mods</code>.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-shield"/></svg><span><b>Апелляция</b> подаётся в Discord; за ложный донос наказание не выдаём — сначала разбираемся.</span></li>
+      </ul>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <div>
+      <b>Unrise Worlds · SMP</b>
+      <p>Правила обновляются без предупреждения. Проверяй эту страницу перед установкой нового мода.</p>
+    </div>
+    <div>
+      <p>IP: <span class="pill todo">заполнить</span> · Discord: <a href="#discord">заполнить</a></p>
+      <p>© 2026 Unrise Worlds. Список запрещённых модификаций — раздел 1.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var items = Array.prototype.slice.call(document.querySelectorAll('.mod'));
+  var cats = Array.prototype.slice.call(document.querySelectorAll('.cat'));
+  var input = document.getElementById('q');
+  var found = document.getElementById('found');
+  var total = document.getElementById('stat-total');
+  var empty = document.getElementById('noresult');
+
+  total.textContent = String(items.length);
+
+  function norm(s) {
+    return (s || '').toLowerCase().replace(/ё/g, 'е').trim();
+  }
+
+  function apply() {
+    var query = norm(input.value);
+    var visible = 0;
+
+    items.forEach(function (item) {
+      var hit = !query || norm(item.textContent).indexOf(query) !== -1;
+      item.hidden = !hit;
+      if (hit) visible++;
+    });
+
+    cats.forEach(function (cat) {
+      var any = Array.prototype.some.call(cat.querySelectorAll('.mod'), function (i) { return !i.hidden; });
+      cat.hidden = !any;
+    });
+
+    found.textContent = query ? visible + ' из ' + items.length : 'все';
+    empty.hidden = visible !== 0;
+  }
+
+  input.addEventListener('input', apply);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === '/' && document.activeElement !== input) {
+      e.preventDefault();
+      input.focus();
+    }
+  });
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var revealables = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+
+  if (reduce || !('IntersectionObserver' in window)) {
+    revealables.forEach(function (el) { el.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: .12 });
+
+    revealables.forEach(function (el) { io.observe(el); });
+  }
+
+  apply();
+})();
+</script>
+
+</body>
+</html>
