@@ -13,707 +13,19 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  @property --glow-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
-
-  :root {
-    --bg: #070b10;
-    --bg-2: #0c131b;
-    --ink: #e9f1f5;
-    --muted: #93a8b6;
-    --line: rgba(151, 196, 214, .14);
-    --panel: rgba(255, 255, 255, .035);
-    --panel-2: rgba(255, 255, 255, .06);
-    --emerald: #34d399;
-    --emerald-deep: #0f766e;
-    --gold: #f3c15d;
-    --danger: #fb6f6f;
-    --amber: #f7b955;
-    --azure: #6fb3ff;
-    --radius: 18px;
-    --shadow: 0 24px 60px -30px rgba(0, 0, 0, .85);
-    --head: "Unbounded", "Segoe UI", system-ui, sans-serif;
-    --body: "Manrope", "Segoe UI", system-ui, sans-serif;
-  }
-
-  * { box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; scroll-padding-top: 86px; }
-
-  body {
-    margin: 0;
-    min-height: 100vh;
-    font-family: var(--body);
-    font-size: 16px;
-    line-height: 1.62;
-    color: var(--ink);
-    background: var(--bg);
-    -webkit-font-smoothing: antialiased;
-  }
-
-  /* ---- фон: свечение + блочная сетка ---- */
-  body::before,
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  body::before {
-    background:
-      radial-gradient(900px 620px at 12% -8%, rgba(52, 211, 153, .22), transparent 60%),
-      radial-gradient(760px 560px at 92% 4%, rgba(243, 193, 93, .14), transparent 62%),
-      radial-gradient(1100px 800px at 50% 110%, rgba(111, 179, 255, .12), transparent 65%),
-      linear-gradient(180deg, var(--bg), var(--bg-2) 55%, var(--bg));
-  }
-
-  body::after {
-    background-image:
-      linear-gradient(rgba(151, 196, 214, .05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(151, 196, 214, .05) 1px, transparent 1px);
-    background-size: 44px 44px;
-    mask-image: radial-gradient(circle at 50% 22%, #000 12%, transparent 72%);
-  }
-
-  .wrap {
-    position: relative;
-    z-index: 1;
-    width: min(1180px, 92vw);
-    margin-inline: auto;
-  }
-
-  /* ---- шапка ---- */
-  .top {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    backdrop-filter: blur(14px);
-    background: linear-gradient(180deg, rgba(7, 11, 16, .94), rgba(7, 11, 16, .68));
-    border-bottom: 1px solid var(--line);
-  }
-
-  .top-in {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    padding: 13px 0;
-  }
-
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .cube {
-    position: relative;
-    width: 34px;
-    height: 34px;
-    border-radius: 9px;
-    background: linear-gradient(145deg, var(--emerald), var(--emerald-deep));
-    box-shadow: 0 0 22px rgba(52, 211, 153, .5);
-    flex: none;
-  }
-
-  .cube::after {
-    content: "";
-    position: absolute;
-    inset: 9px;
-    border-radius: 4px;
-    background: var(--bg);
-  }
-
-  .brand b {
-    font-family: var(--head);
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-  }
-
-  .brand span {
-    display: block;
-    font-size: 11.5px;
-    color: var(--muted);
-    letter-spacing: .16em;
-    text-transform: uppercase;
-  }
-
-  .nav {
-    display: flex;
-    gap: 4px;
-    margin-left: auto;
-    flex-wrap: wrap;
-  }
-
-  .nav a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 13.5px;
-    font-weight: 600;
-    padding: 8px 12px;
-    border-radius: 10px;
-    transition: .18s color, .18s background, .18s transform;
-  }
-
-  .nav a:hover {
-    color: var(--ink);
-    background: var(--panel-2);
-    transform: translateY(-1px);
-  }
-
-  /* ---- герой ---- */
-  .hero {
-    display: grid;
-    grid-template-columns: 1.35fr .65fr;
-    gap: 34px;
-    align-items: end;
-    padding: 74px 0 44px;
-  }
-
-  .kicker {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: var(--emerald);
-    padding: 7px 14px;
-    border: 1px solid rgba(52, 211, 153, .34);
-    border-radius: 999px;
-    background: rgba(52, 211, 153, .08);
-  }
-
-  .kicker svg { width: 15px; height: 15px; }
-
-  h1 {
-    font-family: var(--head);
-    font-weight: 900;
-    font-size: clamp(34px, 5.4vw, 60px);
-    line-height: 1.06;
-    letter-spacing: -.02em;
-    margin: 20px 0 14px;
-    background: linear-gradient(96deg, #ffffff 10%, var(--emerald) 58%, var(--gold) 96%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  .lede {
-    font-size: clamp(15px, 1.7vw, 18px);
-    color: var(--muted);
-    max-width: 62ch;
-    margin: 0;
-  }
-
-  .lede b { color: var(--ink); font-weight: 600; }
-
-  .meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 26px;
-  }
-
-  .pill {
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--muted);
-    padding: 7px 13px;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    background: var(--panel);
-  }
-
-  .pill code { font: 600 12.5px/1 ui-monospace, "Cascadia Mono", monospace; color: var(--ink); }
-
-  .pill.todo {
-    color: var(--amber);
-    border-color: rgba(247, 185, 85, .38);
-    background: rgba(247, 185, 85, .08);
-  }
-
-  button.pill {
-    font-family: inherit;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: .2s border-color, .2s color, .2s box-shadow;
-  }
-
-  button.pill:hover {
-    border-color: rgba(52, 211, 153, .55);
-    color: var(--ink);
-    box-shadow: 0 0 0 4px rgba(52, 211, 153, .08);
-  }
-
-  button.pill .hint { color: #6f8492; font-weight: 500; }
-
-  button.pill.copied {
-    border-color: rgba(52, 211, 153, .6);
-    background: rgba(52, 211, 153, .12);
-  }
-
-  button.pill.copied code { color: var(--emerald); }
-
-  /* ---- карточка факела ---- */
-  .torch-card {
-    position: relative;
-    overflow: hidden;
-    padding: 24px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: linear-gradient(170deg, rgba(243, 193, 93, .12), rgba(255, 255, 255, .03) 46%);
-    box-shadow: var(--shadow);
-  }
-
-  .torch-card::after {
-    content: "";
-    position: absolute;
-    right: -60px;
-    top: -70px;
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(243, 193, 93, .4), transparent 66%);
-    animation: breathe 6s ease-in-out infinite;
-  }
-
-  @keyframes breathe {
-    50% { transform: scale(1.18); opacity: .78; }
-  }
-
-  .torch-card h2 {
-    font-family: var(--head);
-    font-size: 15px;
-    font-weight: 700;
-    margin: 0 0 10px;
-    letter-spacing: .01em;
-  }
-
-  .torch-card p { margin: 0; font-size: 14px; color: var(--muted); position: relative; }
-
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-top: 18px;
-    position: relative;
-  }
-
-  .stat b {
-    display: block;
-    font-family: var(--head);
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--emerald);
-    line-height: 1.1;
-  }
-
-  .stat span { font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
-
-  /* ---- секции ---- */
-  section { padding: 30px 0; }
-
-  .sec-head {
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-bottom: 8px;
-  }
-
-  h2.title {
-    font-family: var(--head);
-    font-size: clamp(22px, 3vw, 30px);
-    font-weight: 700;
-    letter-spacing: -.01em;
-    margin: 0;
-  }
-
-  .sec-head p { margin: 0; color: var(--muted); font-size: 14.5px; }
-
-  .rule {
-    height: 1px;
-    border: 0;
-    margin: 18px 0 26px;
-    background: linear-gradient(90deg, rgba(52, 211, 153, .5), var(--line) 42%, transparent);
-  }
-
-  /* ---- спотлайт Freecam / Fullbright ---- */
-  .spotlight {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 18px;
-    margin-top: 22px;
-  }
-
-  .spot {
-    position: relative;
-    overflow: hidden;
-    padding: 26px;
-    border-radius: var(--radius);
-    border: 1px solid rgba(251, 111, 111, .3);
-    background: linear-gradient(165deg, rgba(251, 111, 111, .13), rgba(255, 255, 255, .028) 52%);
-    box-shadow: var(--shadow);
-  }
-
-  .spot h3 {
-    font-family: var(--head);
-    font-size: 20px;
-    font-weight: 700;
-    margin: 14px 0 8px;
-  }
-
-  .spot p { margin: 0; color: #cfdde5; font-size: 14.5px; }
-
-  .spot .tag {
-    display: inline-block;
-    margin-top: 16px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--danger);
-  }
-
-  .spot svg.lead {
-    width: 26px;
-    height: 26px;
-    color: var(--danger);
-    filter: drop-shadow(0 0 12px rgba(251, 111, 111, .55));
-  }
-
-  /* ---- панель поиска ---- */
-  .toolbar {
-    display: flex;
-    gap: 14px;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 16px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: var(--panel);
-    margin-bottom: 26px;
-  }
-
-  .field {
-    position: relative;
-    flex: 1 1 280px;
-    min-width: 240px;
-  }
-
-  .field svg {
-    position: absolute;
-    left: 13px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 17px;
-    height: 17px;
-    color: var(--muted);
-  }
-
-  .field input {
-    width: 100%;
-    font: 500 14.5px/1 var(--body);
-    color: var(--ink);
-    padding: 13px 14px 13px 40px;
-    border-radius: 12px;
-    border: 1px solid var(--line);
-    background: rgba(0, 0, 0, .3);
-    outline: none;
-    transition: .2s border-color, .2s box-shadow;
-  }
-
-  .field input::placeholder { color: #6f8492; }
-
-  .field input:focus {
-    border-color: rgba(52, 211, 153, .6);
-    box-shadow: 0 0 0 4px rgba(52, 211, 153, .12);
-  }
-
-  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
-
-  .chip {
-    font: 600 12.5px/1 var(--body);
-    color: var(--muted);
-    text-decoration: none;
-    padding: 9px 12px;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    background: rgba(0, 0, 0, .22);
-    transition: .18s color, .18s border-color, .18s transform;
-  }
-
-  .chip:hover {
-    color: var(--emerald);
-    border-color: rgba(52, 211, 153, .5);
-    transform: translateY(-1px);
-  }
-
-  .counter { font-size: 13px; color: var(--muted); white-space: nowrap; margin-left: auto; }
-  .counter b { color: var(--ink); }
-
-  /* ---- категории ---- */
-  .cat { margin-bottom: 34px; }
-
-  .cat-head {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    margin-bottom: 16px;
-  }
-
-  .cat-icon {
-    display: grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    flex: none;
-    border-radius: 12px;
-    border: 1px solid rgba(52, 211, 153, .3);
-    background: linear-gradient(150deg, rgba(52, 211, 153, .16), rgba(255, 255, 255, .03));
-    color: var(--emerald);
-  }
-
-  .cat-icon svg { width: 21px; height: 21px; }
-
-  .cat-head h3 {
-    font-family: var(--head);
-    font-size: 17px;
-    font-weight: 700;
-    margin: 0;
-  }
-
-  .cat-head p { margin: 2px 0 0; font-size: 13.5px; color: var(--muted); }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 12px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .mod {
-    display: flex;
-    gap: 13px;
-    align-items: flex-start;
-    padding: 16px 17px;
-    border: 1px solid var(--line);
-    border-radius: 15px;
-    background: linear-gradient(168deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .018));
-    transition: .2s transform, .2s border-color, .2s box-shadow;
-  }
-
-  .mod:hover {
-    transform: translateY(-3px);
-    border-color: rgba(52, 211, 153, .34);
-    box-shadow: 0 18px 34px -22px rgba(0, 0, 0, .9);
-  }
-
-  .mod > div { min-width: 0; }
-
-  .mod h4 {
-    font-size: 14.5px;
-    font-weight: 700;
-    margin: 0 0 4px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .mod p { margin: 0; font-size: 13.4px; color: var(--muted); }
-
-  .mark {
-    width: 26px;
-    height: 26px;
-    flex: none;
-    display: grid;
-    place-items: center;
-    border-radius: 8px;
-    border: 1px solid rgba(251, 111, 111, .34);
-    background: rgba(251, 111, 111, .12);
-    color: var(--danger);
-    margin-top: 1px;
-  }
-
-  .mark svg { width: 15px; height: 15px; }
-
-  .sev {
-    font-size: 10.5px;
-    font-weight: 800;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    padding: 3px 8px;
-    border-radius: 6px;
-    white-space: nowrap;
-  }
-
-  .sev.instant { color: #ffb1b1; background: rgba(251, 111, 111, .16); border: 1px solid rgba(251, 111, 111, .4); }
-  .sev.after { color: #ffd79a; background: rgba(247, 185, 85, .14); border: 1px solid rgba(247, 185, 85, .36); }
-  .sev.case { color: #b8d8ff; background: rgba(111, 179, 255, .13); border: 1px solid rgba(111, 179, 255, .32); }
-
-  .empty {
-    padding: 26px;
-    text-align: center;
-    color: var(--muted);
-    border: 1px dashed var(--line);
-    border-radius: var(--radius);
-    font-size: 14.5px;
-  }
-
-  [hidden] { display: none !important; }
-
-  /* ---- разрешено ---- */
-  .allowed {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 12px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .allowed li {
-    display: flex;
-    gap: 12px;
-    padding: 15px 16px;
-    border-radius: 14px;
-    border: 1px solid rgba(52, 211, 153, .22);
-    background: linear-gradient(168deg, rgba(52, 211, 153, .1), rgba(255, 255, 255, .02));
-    font-size: 13.6px;
-    color: #cfe6dc;
-  }
-
-  .allowed svg { width: 19px; height: 19px; flex: none; color: var(--emerald); margin-top: 2px; }
-  .allowed b { color: var(--ink); }
-
-  /* ---- наказания ---- */
-  .table-wrap {
-    overflow-x: auto;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: var(--panel);
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 560px;
-    font-size: 14px;
-  }
-
-  th, td {
-    padding: 14px 17px;
-    text-align: left;
-    border-bottom: 1px solid var(--line);
-    vertical-align: top;
-  }
-
-  th {
-    font-family: var(--head);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    background: rgba(0, 0, 0, .26);
-  }
-
-  tr:last-child td { border-bottom: 0; }
-  td b { color: var(--emerald); font-weight: 700; }
-  td.strong { color: var(--ink); font-weight: 600; }
-
-  .note {
-    display: flex;
-    gap: 13px;
-    padding: 17px 19px;
-    border-radius: 14px;
-    border: 1px solid rgba(247, 185, 85, .3);
-    background: rgba(247, 185, 85, .08);
-    font-size: 14px;
-    color: #e6dcc8;
-    margin-top: 18px;
-  }
-
-  .note svg { width: 20px; height: 20px; flex: none; color: var(--amber); }
-
-  /* ---- футер ---- */
-  footer {
-    margin-top: 40px;
-    border-top: 1px solid var(--line);
-    background: linear-gradient(180deg, rgba(0, 0, 0, .2), transparent);
-  }
-
-  .foot-in {
-    display: flex;
-    gap: 26px;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    padding: 34px 0 44px;
-    font-size: 13.5px;
-    color: var(--muted);
-  }
-
-  .foot-in b { font-family: var(--head); font-size: 14px; color: var(--ink); letter-spacing: .04em; }
-
-  .foot-in code {
-    font: 600 13.5px/1.5 ui-monospace, "Cascadia Mono", monospace;
-    color: var(--ink);
-    padding: 2px 8px;
-    border-radius: 7px;
-    background: rgba(255, 255, 255, .06);
-    border: 1px solid var(--line);
-  }
-  .foot-in p { margin: 6px 0 0; }
-
-  .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  /* ---- анимация появления ---- */
-  .reveal { opacity: 0; transform: translateY(16px); }
-  .reveal.in { opacity: 1; transform: none; transition: .55s ease; }
-
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    .reveal { opacity: 1; transform: none; }
-    .torch-card::after { animation: none; }
-    .mod, .chip, .nav a { transition: none; }
-  }
-
-  @media (max-width: 940px) {
-    .hero { grid-template-columns: 1fr; gap: 26px; padding-top: 48px; }
-    .nav { display: none; }
-    .counter { margin-left: 0; }
-  }
-
-  @media (max-width: 520px) {
-    body { font-size: 15px; }
-    .grid { grid-template-columns: 1fr; }
-    .stats { grid-template-columns: 1fr 1fr; }
-    .toolbar { padding: 13px; }
-  }
-</style>
+<link rel="stylesheet" href="index.css">
 </head>
 <body>
+
+<div class="scene" aria-hidden="true">
+  <i class="sun"></i>
+  <span style="--x:8%;--s:26px;--tint:rgba(52,211,153,.3);--dur:30s;--delay:-4s;--dx:70px"></span>
+  <span style="--x:24%;--s:16px;--tint:rgba(243,193,93,.28);--dur:24s;--delay:-12s;--dx:-50px"></span>
+  <span style="--x:46%;--s:32px;--tint:rgba(111,179,255,.22);--dur:38s;--delay:-20s;--dx:90px"></span>
+  <span style="--x:64%;--s:14px;--tint:rgba(52,211,153,.26);--dur:22s;--delay:-8s;--dx:-30px"></span>
+  <span style="--x:81%;--s:24px;--tint:rgba(243,193,93,.2);--dur:34s;--delay:-16s;--dx:60px"></span>
+  <span style="--x:93%;--s:18px;--tint:rgba(255,255,255,.14);--dur:28s;--delay:-24s;--dx:-70px"></span>
+</div>
 
 <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
   <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
@@ -744,6 +56,7 @@
       <a href="#check">Проверки</a>
     </nav>
   </div>
+  <div class="progress" id="progress" aria-hidden="true"></div>
 </header>
 
 <main id="top">
@@ -763,7 +76,7 @@
           </button>
         </div>
       </div>
-      <aside class="torch-card reveal">
+      <aside class="torch-card" data-rise>
         <h2><svg style="width:18px;height:18px;vertical-align:-3px;color:var(--gold)" aria-hidden="true"><use href="#i-torch"/></svg> Почему так строго</h2>
         <p>SMP живёт на доверии: один игрок с Freecam или автокликером обесценивает чужие недели копа, фарма и постройки базы. Поэтому список читов открыт и конкретен — чтобы не было споров «а это можно?».</p>
         <div class="stats">
@@ -780,14 +93,14 @@
         <p>Их запрещаем явно и без исключений.</p>
       </div>
       <hr class="rule">
-      <div class="spotlight">
-        <article class="spot reveal">
+      <div class="spotlight" data-rise>
+        <article class="spot">
           <svg class="lead" aria-hidden="true"><use href="#i-eye"/></svg>
           <h3>Freecam</h3>
           <p>Камера проходит сквозь блоки, пока персонаж стоит на месте. Так разведывают чужие базы, смотрят, что у тебя в сундуках, и фармят опыл, отсутствуя на сервере. Это отдельный режим spectator-обмана: запрещён в любом виде — модом, клиентом или функцией внутри мод-пака.</p>
           <span class="tag">Бан после первого подтверждения</span>
         </article>
-        <article class="spot reveal">
+        <article class="spot">
           <svg class="lead" aria-hidden="true"><use href="#i-eye"/></svg>
           <h3>Fullbright / Gamma / Night Vision</h3>
           <p>Максимальная яркость вместо света: ты видишь в полной темноте очертания мобов, игроков и руду, а обычный игрок — нет. Сюда же относятся гамма-моды, шейдер-пресеты с нулевой тёмной точкой и ресурспаки с «no fog» для пещер. Разрешены только ванильные настройки яркости и собственные факелы.</p>
@@ -803,7 +116,7 @@
       </div>
       <hr class="rule">
 
-      <div class="toolbar">
+      <div class="toolbar" data-rise>
         <label class="field">
           <svg aria-hidden="true"><use href="#i-search"/></svg>
           <input id="q" type="search" placeholder="Например: reach, xray, автокликер, Litematica…" autocomplete="off" aria-label="Поиск по списку запрещённых модификаций">
@@ -819,7 +132,7 @@
         <span class="counter">Показано: <b id="found">все</b></span>
       </div>
 
-      <div class="cat" id="c-clients">
+      <div class="cat" id="c-clients" data-rise>
         <div class="cat-head">
           <span class="cat-icon"><svg aria-hidden="true"><use href="#i-cube"/></svg></span>
           <div>
@@ -840,7 +153,7 @@
         </ul>
       </div>
 
-      <div class="cat" id="c-view">
+      <div class="cat" id="c-view" data-rise>
         <div class="cat-head">
           <span class="cat-icon"><svg aria-hidden="true"><use href="#i-eye"/></svg></span>
           <div>
@@ -859,7 +172,7 @@
         </ul>
       </div>
 
-      <div class="cat" id="c-combat">
+      <div class="cat" id="c-combat" data-rise>
         <div class="cat-head">
           <span class="cat-icon"><svg aria-hidden="true"><use href="#i-sword"/></svg></span>
           <div>
@@ -878,7 +191,7 @@
         </ul>
       </div>
 
-      <div class="cat" id="c-move">
+      <div class="cat" id="c-move" data-rise>
         <div class="cat-head">
           <span class="cat-icon"><svg aria-hidden="true"><use href="#i-steps"/></svg></span>
           <div>
@@ -897,7 +210,7 @@
         </ul>
       </div>
 
-      <div class="cat" id="c-info">
+      <div class="cat" id="c-info" data-rise>
         <div class="cat-head">
           <span class="cat-icon"><svg aria-hidden="true"><use href="#i-radar"/></svg></span>
           <div>
@@ -917,7 +230,7 @@
         </ul>
       </div>
 
-      <div class="cat" id="c-auto">
+      <div class="cat" id="c-auto" data-rise>
         <div class="cat-head">
           <span class="cat-icon"><svg aria-hidden="true"><use href="#i-bot"/></svg></span>
           <div>
@@ -945,7 +258,7 @@
         <p>Разрешено ровно то, что не даёт преимущества.</p>
       </div>
       <hr class="rule">
-      <ul class="allowed">
+      <ul class="allowed" data-rise>
         <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>Оптимизация:</b> Sodium, Lithium, Starlight/Phosphor, FerriteCore и OptiFine — без рентген-пресетов и отключённой темноты.</span></li>
         <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>Шейдеры:</b> Iris + обычные шейдеры с ванильной яркостью. Пресеты «x-ray», «no fog», «cave mode» запрещены.</span></li>
         <li><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>JEI / REI / EMI:</b> только рецепты и свои предметы. Ни один ore-плагин или сканер мира.</span></li>
@@ -963,7 +276,7 @@
         <p>Администрация вправе ужесточить наказание при отягчающих.</p>
       </div>
       <hr class="rule">
-      <div class="table-wrap">
+      <div class="table-wrap" data-rise>
         <table>
           <caption class="visually-hidden">Наказания за использование запрещённых модификаций</caption>
           <thead>
@@ -977,7 +290,7 @@
           </tbody>
         </table>
       </div>
-      <div class="note">
+      <div class="note" data-rise>
         <svg aria-hidden="true"><use href="#i-warn"/></svg>
         <span>Ссылка на «все так играют», «я не знал, что это чит», «мод был в сборке, я не проверял» не освобождает от ответственности. Запрещённый мод достаточно просто иметь в папке <code>mods</code> и зайти на сервер.</span>
       </div>
@@ -989,7 +302,7 @@
         <p>Чтобы не банить случайно — и не закрывать глаза на чит.</p>
       </div>
       <hr class="rule">
-      <ul class="allowed">
+      <ul class="allowed" data-rise>
         <li><svg aria-hidden="true"><use href="#i-shield"/></svg><span><b>Античит в реальном времени</b> анализирует тайминги, движения и дистанцию ударов, а не имена модов.</span></li>
         <li><svg aria-hidden="true"><use href="#i-shield"/></svg><span><b>Разборы реплеев и логов</b> по жалобам: мы смотрим запись боя, а не верим на слово.</span></li>
         <li><svg aria-hidden="true"><use href="#i-shield"/></svg><span><b>Жалобы игроков</b> с видео, таймкодом и ником рассматриваются в первую очередь.</span></li>
@@ -1107,23 +420,52 @@
     }
   });
 
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var revealables = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  var root = document.documentElement;
+  root.classList.add('js');
 
-  if (reduce || !('IntersectionObserver' in window)) {
-    revealables.forEach(function (el) { el.classList.add('in'); });
+  var rising = Array.prototype.slice.call(document.querySelectorAll('[data-rise]'));
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  function showAll() {
+    rising.forEach(function (el) { el.classList.add('shown'); });
+  }
+
+  if (reduceMotion.matches || !('IntersectionObserver' in window)) {
+    showAll();
   } else {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in');
-          io.unobserve(entry.target);
-        }
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('shown');
+        io.unobserve(entry.target);
       });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: .12 });
+    }, { rootMargin: '0px 0px -6% 0px', threshold: .08 });
 
-    revealables.forEach(function (el) { io.observe(el); });
+    rising.forEach(function (el) { io.observe(el); });
+    reduceMotion.addEventListener('change', showAll);
   }
+
+  var bar = document.getElementById('progress');
+  var ticking = false;
+
+  function paint() {
+    ticking = false;
+    var max = root.scrollHeight - window.innerHeight;
+    var ratio = max > 0 ? Math.min(1, Math.max(0, window.pageYOffset / max)) : 0;
+    bar.style.setProperty('--p', ratio.toFixed(4));
+    root.classList.toggle('scrolled', window.pageYOffset > 40);
+  }
+
+  function schedulePaint() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(paint);
+    }
+  }
+
+  window.addEventListener('scroll', schedulePaint, { passive: true });
+  window.addEventListener('resize', schedulePaint, { passive: true });
+  paint();
 
   apply();
 })();
