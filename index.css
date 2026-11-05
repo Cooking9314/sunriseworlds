@@ -911,9 +911,9 @@
 
   /* ---- курсор ---- */
   :root {
-    --cursor-arrow: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><path d='M8 4v19l5.5-4.4 3.2 7.4 3.6-1.6-3.2-7.3H25z' fill='%23f2f8fb' stroke='%230e7a63' stroke-width='2.4'/></svg>") 7 4, default;
-    --cursor-pointer: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><path d='M8 4v19l5.5-4.4 3.2 7.4 3.6-1.6-3.2-7.3H25z' fill='%23f7cf7a' stroke='%23a8590f' stroke-width='2.4'/></svg>") 7 4, pointer;
-    --cursor-text: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><rect x='12' y='5' width='8' height='22' rx='2' fill='%23f2f8fb' stroke='%230e7a63' stroke-width='2.4'/><path d='M8 5h16M8 27h16' stroke='%230e7a63' stroke-width='2.4'/></svg>") 16 16, text;
+    --cursor-arrow: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAjElEQVR42u3WSwqAMAwE0J7AS3oLj+1KcKGrgJSmTcWZAclA132kn6SUjJNlWy9bMsB+nDqEAWSIJ0CCqAF0RAtARXgAGqIHoCBGADgiAoAiogAYYgYAQcwCPke8ARiC/grqBf2KZc/QNoOVPNKOqQ2qNZBQq+BdKuox9GAygHdBpQOrBCAd2TOZX+UGI6+wDQwaQbAAAAAASUVORK5CYII=") 5 2, default;
+    --cursor-pointer: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAkUlEQVR42u3WwQmAMAwF0G7gfK7iRG7jOB71FJCS2Kb0/4DmQ+6vbUpSSkbJvi6XVBjgPLY4hADCEE9ACKIG0BEagIqwADTEG4CCaAHgiB4AFNELgCE8AAjCC5iOGAFMRYwCBEH9hlrBZgHktJ5pSJuS1j5AuwVrI6KNaauhtGeA9oKnQekbc92c/1rbM5lP5QZOVpJ0iOmLZAAAAABJRU5ErkJggg==") 5 2, pointer;
+    --cursor-text: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAUElEQVR42mNgGAWjgATAV5X8nxhMUwd8+vEbLx51AM0dgIyRLaVLGsAVGnSzdNQBow4YdcCoA0YdMOqAAXfAgFfHoy2iQdcko3uzfBQMSwAAxObIyORZJvMAAAAASUVORK5CYII=") 16 16, text;
   }
 
   body { cursor: var(--cursor-arrow); }
@@ -929,10 +929,19 @@
   textarea,
   select { cursor: var(--cursor-text); }
 
-  /* ---- скролл-бар ---- */
-  html {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(52, 211, 153, .8) rgba(255, 255, 255, .045);
+  /* ---- скролл-бар ----
+     В Chrome/Edge/Safari стандартные scrollbar-width и scrollbar-color
+     отключают псевдоэлементы ::-webkit-scrollbar, поэтому они только для Firefox. */
+  @supports (-moz-appearance: none) {
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(52, 211, 153, .8) rgba(255, 255, 255, .045);
+    }
+
+    .table-wrap {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(52, 211, 153, .7) rgba(255, 255, 255, .04);
+    }
   }
 
   ::-webkit-scrollbar { width: 13px; height: 13px; }
@@ -969,11 +978,6 @@
   }
 
   ::-webkit-scrollbar-corner { background: transparent; }
-
-  .table-wrap {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(52, 211, 153, .7) rgba(255, 255, 255, .04);
-  }
 
   .table-wrap::-webkit-scrollbar { height: 9px; }
 
