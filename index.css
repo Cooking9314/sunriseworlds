@@ -211,15 +211,39 @@
     border: 1px solid var(--line);
     border-radius: 999px;
     background: var(--panel);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
   }
 
   .pill code { font: 600 12.5px/1 ui-monospace, "Cascadia Mono", monospace; color: var(--ink); }
 
-  .pill.todo {
-    color: var(--amber);
-    border-color: rgba(247, 185, 85, .38);
-    background: rgba(247, 185, 85, .08);
+  .pill svg { width: 14px; height: 14px; flex: none; color: var(--emerald); }
+
+  /* ---- иконки Lucide (lucide.dev, ISC) ----
+     геометрия в спрайте index.html, вес штриха задаётся здесь, а не в символах */
+  body svg { stroke-width: 1.8; }
+
+  .sev { display: inline-flex; align-items: center; gap: 4px; }
+
+  .sev svg {
+    width: 12px;
+    height: 12px;
+    flex: none;
+    stroke-width: 2.2;
   }
+
+  .sec-head h2.title { display: flex; align-items: center; gap: 11px; }
+
+  .sec-head h2.title > svg {
+    width: 22px;
+    height: 22px;
+    flex: none;
+    color: var(--emerald);
+    filter: drop-shadow(0 0 10px rgba(52, 211, 153, .35));
+  }
+
+  .foot-in svg { width: 14px; height: 14px; vertical-align: -2px; color: var(--emerald); }
 
   button.pill {
     font-family: inherit;
@@ -529,7 +553,7 @@
     margin-top: 1px;
   }
 
-  .mark svg { width: 15px; height: 15px; }
+  .mark svg { width: 15px; height: 15px; transition: .35s transform; }
 
   .sev {
     font-size: 10.5px;
@@ -836,7 +860,7 @@
 
   .mod:hover::after { animation: sweep .85s cubic-bezier(.3, .6, .2, 1); }
   .mod:hover .mark { animation: popMark .55s ease; }
-  .mod:hover .mark svg { transition: .35s transform; transform: rotate(90deg); }
+  .mod:hover .mark svg { transform: rotate(90deg); }
 
   .spot, .allowed li, .torch-card { transition: .35s transform, .35s border-color, .35s box-shadow; }
   .spot:hover { transform: translateY(-4px); border-color: rgba(251, 111, 111, .52); box-shadow: 0 22px 44px -24px rgba(251, 111, 111, .4); }
@@ -889,7 +913,7 @@
 
     .top-in, .hero h1, .hero .kicker, .hero .lede, .hero .meta { animation: none; }
     .scene, .torch-card::after, .mod:hover::after, .mod:hover .mark, .field input:focus { animation: none; }
-    .mod, .chip, .nav a, .spot, .allowed li, .torch-card, .cat-icon svg, tbody tr, .top-in, .nav a::after { transition: none; }
+    .mod, .chip, .nav a, .spot, .allowed li, .torch-card, .cat-icon svg, .mark svg, tbody tr, .top-in, .nav a::after { transition: none; }
     .mod::after { opacity: 0; }
     .progress { display: none; }
   }
