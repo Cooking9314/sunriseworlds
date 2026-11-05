@@ -79,6 +79,7 @@
   .top-in {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 18px;
     padding: 13px 0;
   }
@@ -128,7 +129,6 @@
   .nav {
     display: flex;
     gap: 4px;
-    margin-left: auto;
     flex-wrap: wrap;
   }
 
