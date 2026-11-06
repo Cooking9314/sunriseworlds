@@ -111,7 +111,7 @@
           </div>
         </aside>
 
-        <aside class="dc-card" id="dc" data-rise data-guild="" data-invite="">
+        <aside class="dc-card" id="dc" data-rise data-guild="1567738200682668113" data-invite="3KHgzWhAN9">
           <h2><span class="dc-mark" id="dc-mark" aria-hidden="true"><svg><use href="#i-discord"/></svg></span> <span id="dc-name">Discord</span></h2>
           <p class="dc-count" id="dc-count" hidden></p>
           <ul class="dc-people" id="dc-people" hidden></ul>
@@ -536,10 +536,13 @@
   var dcNote = document.getElementById('dc-note');
   var dcMark = document.getElementById('dc-mark');
   var dcTimer;
+  var dcLast = 0;
   var dcGuild = dc.dataset.guild;
   var dcInvite = dc.dataset.invite;
-  var dcUrl = dcInvite ? 'https://discord.com/api/invites/' + dcInvite + '?with_counts=true'
-    : dcGuild ? 'https://discord.com/api/guilds/' + dcGuild + '/widget.json' : '';
+  var dcSources = [];
+  /* виджет даёт список людей, приглашение — только счётчики; если виджет выключен, сами включим */
+  if (dcGuild) dcSources.push({ name: 'виджет', url: 'https://discord.com/api/guilds/' + dcGuild + '/widget.json' });
+  if (dcInvite) dcSources.push({ name: 'приглашение', url: 'https://discord.com/api/invites/' + dcInvite + '?with_counts=true' });
   var DC_WWW = dcInvite ? 'https://discord.gg/' + dcInvite : '';
   var DC_ORDER = { online: 0, idle: 1, dnd: 2, invisible: 3, offline: 4 };
   var DC_LABEL = { online: 'в сети', idle: 'отошёл', dnd: 'не беспокоить', invisible: 'невидимка', offline: 'не в сети' };
@@ -612,7 +615,7 @@
     dcMark.appendChild(img);
   }
 
-  function dcShow(d) {
+  function dcShow(d, src) {
     var at = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
     dcName.textContent = d.name || (d.guild && d.guild.name) || 'Sunrise Worlds';
     if (d.guild) dcIcon(d.guild.icon, d.guild.id);
@@ -629,7 +632,7 @@
       dcCount.textContent = total + ' ' + plural(total, 'участник', 'участника', 'участников') +
         ' · в сети ' + online;
     }
-    dcNote.textContent = 'Данные Discord, обновлено в ' + at + '.';
+    dcNote.textContent = 'Данные Discord (' + src + '), обновлено в ' + at + '.';
   }
 
   function dcFail() {
@@ -640,17 +643,36 @@
       : 'Discord не отдал статистику: проверь, включён ли виджет на сервере.';
   }
 
+  function askDiscord(src) {
+    return fetch(src.url, { cache: 'no-store' }).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    }).then(function (data) {
+      if (!data || (!data.name && !data.guild)) throw new Error('empty');
+      return data;
+    });
+  }
+
   function readDiscord() {
     clearTimeout(dcTimer);
     dcTimer = setTimeout(readDiscord, 60000);
-    if (!window.fetch) { dcFail(); return; }
-    fetch(dcUrl, { cache: 'no-store' }).then(function (r) {
-      if (!r.ok) throw new Error(r.status);
-      return r.json();
-    }).then(dcShow).catch(dcFail);
+    if (!window.fetch || !dcSources.length) { dcFail(); return; }
+    /* Discord ограничивает частоту запросов без авторизации, поэтому не чаще раза в 15 секунд */
+    var now = Date.now();
+    if (now - dcLast < 15000) return;
+    dcLast = now;
+    var used = dcSources[0];
+    askDiscord(used).catch(function () {
+      if (dcSources.length < 2) throw new Error('no source');
+      dcSources.shift(); /* источник молчит — больше его не дёргаем до перезагрузки */
+      used = dcSources[0];
+      return askDiscord(used);
+    }).then(function (data) {
+      dcShow(data, used.name);
+    }).catch(dcFail);
   }
 
-  if (dcUrl) {
+  if (dcSources.length) {
     if (DC_WWW) dcLink(DC_WWW);
     readDiscord();
     document.addEventListener('visibilitychange', function () {
