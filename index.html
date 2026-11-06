@@ -63,6 +63,8 @@
   <symbol id="i-inspect" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m8 11 2 2 4-4" /><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></symbol>
   <symbol id="i-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18" /><path d="m19 8 3 8a5 5 0 0 1-6 0zV7" /><path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1" /><path d="m5 8 3 8a5 5 0 0 1-6 0zV7" /><path d="M7 21h10" /></symbol>
   <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" /></symbol>
+  <symbol id="i-chest" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="5" x="2" y="3" rx="1" /><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" /><path d="M10 12h4" /></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></symbol>
   <!-- логотип Discord: icon-icons.com (free) -->
   <symbol id="i-discord" viewBox="0 0 32 32" fill="currentColor"><path d="M26.964 0c1.875 0 3.385 1.516 3.474 3.302v28.698l-3.568-3.031-1.958-1.781-2.141-1.865 0.891 2.938h-18.714c-1.87 0-3.385-1.417-3.385-3.302v-21.651c0-1.786 1.516-3.302 3.391-3.302h22zM18.807 7.578h-0.042l-0.271 0.266c2.766 0.802 4.104 2.052 4.104 2.052-1.781-0.891-3.391-1.339-4.995-1.521-1.156-0.177-2.318-0.083-3.297 0h-0.271c-0.625 0-1.958 0.271-3.745 0.984-0.62 0.271-0.979 0.448-0.979 0.448s1.333-1.339 4.281-2.052l-0.182-0.177c0 0-2.229-0.089-4.635 1.693 0 0-2.406 4.193-2.406 9.359 0 0 1.333 2.318 4.99 2.406 0 0 0.536-0.708 1.073-1.333-2.052-0.625-2.854-1.875-2.854-1.875s0.182 0.089 0.448 0.266h0.078c0.042 0 0.063 0.021 0.083 0.042v0.010c0.021 0.021 0.042 0.036 0.078 0.036 0.443 0.182 0.88 0.359 1.24 0.536 0.625 0.266 1.422 0.536 2.401 0.714 1.24 0.182 2.661 0.266 4.281 0 0.797-0.182 1.599-0.354 2.401-0.714 0.516-0.266 1.156-0.531 1.859-0.984 0 0-0.797 1.25-2.938 1.875 0.438 0.62 1.057 1.333 1.057 1.333 3.661-0.083 5.083-2.401 5.161-2.302 0-5.161-2.422-9.359-2.422-9.359-2.177-1.62-4.219-1.682-4.578-1.682l0.073-0.026zM19.031 13.464c0.938 0 1.693 0.797 1.693 1.776 0 0.99-0.76 1.786-1.693 1.786-0.938 0-1.693-0.797-1.693-1.776 0-0.99 0.76-1.786 1.693-1.786zM12.974 13.464c0.932 0 1.688 0.797 1.688 1.776 0 0.99-0.76 1.786-1.693 1.786-0.938 0-1.698-0.797-1.698-1.776 0-0.99 0.76-1.786 1.698-1.786z" /></symbol>
 </svg>
@@ -298,7 +300,8 @@
         <li><svg aria-hidden="true"><use href="#i-palette"/></svg><span><b>Шейдеры:</b> Iris + обычные шейдеры с ванильной яркостью. Пресеты «x-ray», «no fog», «cave mode» запрещены.</span></li>
         <li><svg aria-hidden="true"><use href="#i-book"/></svg><span><b>JEI / REI / EMI:</b> только рецепты и свои предметы. Ни один ore-плагин или сканер мира.</span></li>
         <li><svg aria-hidden="true"><use href="#i-gamepad"/></svg><span><b>Клиенты:</b> Lunar и Badlion — после проверки, что там нет макросов, автокликера и чит-тумблеров.</span></li>
-        <li><svg aria-hidden="true"><use href="#i-map"/></svg><span><b>Миникарта:</b> Xaero's / VoxelMap только со своей позицией и границами чанков. Радар мобов, точки игроков и любой трекинг — выключить.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-map"/></svg><span><b>Миникарта:</b> Xaero's / VoxelMap только со своей позицией и границами чанков. Радар мобов, точки игроков и трекинг чужих сундуков — выключить.</span></li>
+        <li><svg aria-hidden="true"><use href="#i-chest"/></svg><span><b>Chest Tracker:</b> отметки только тех сундуков, которые открывал ты сам, и в пределах пары чанков вокруг — так удобно помнить свои тайники. Сбор чужих сундуков в общий список, память на весь мир и подсветка сквозь блоки остаются в запретах.</span></li>
         <li><svg aria-hidden="true"><use href="#i-mic"/></svg><span><b>Голосовой чат и косметика:</b> Simple Voice Chat, скин-слой, анимации, HUD-перемещения, крупные шрифты.</span></li>
         <li><svg aria-hidden="true"><use href="#i-sparkles"/></svg><span><b>Удобство без обмана:</b> сортировка своего инвентаря, авто-заполнение сундука при открытии, отключение тревожных звуков.</span></li>
         <li><svg aria-hidden="true"><use href="#i-layers"/></svg><span><b>Свои ресурспаки,</b> где меняются только текстуры, звуки и интерфейс — без прозрачных блоков и подсветки сущностей.</span></li>
@@ -344,6 +347,14 @@
         <li><svg aria-hidden="true"><use href="#i-inspect"/></svg><span><b>Выборочные проверки</b> suspicious-игроков: скриншоты списка модов и папки <code>mods</code>.</span></li>
         <li><svg aria-hidden="true"><use href="#i-scale"/></svg><span><b>Апелляция</b> подаётся администратору в игре; за ложный донос наказание не выдаём — сначала разбираемся.</span></li>
       </ul>
+      <div class="tool-card" data-rise>
+        <span class="tool-mark" aria-hidden="true"><svg><use href="#i-inspect"/></svg></span>
+        <div>
+          <b>SwCC — сканер папок игры</b>
+          <p>Тем же пользуемся на выборочных проверках: утилита локально ищет в папке <code>.minecraft</code> признаки чит-клиентов и показывает, что именно найдено. Никуда ничего не уходит, код открыт.</p>
+        </div>
+        <a class="tool-link" href="https://github.com/Cooking9314/swcc" target="_blank" rel="noopener noreferrer">Скачать и посмотреть код<svg aria-hidden="true"><use href="#i-external"/></svg></a>
+      </div>
     </section>
 
   </div>
