@@ -278,44 +278,16 @@
   .pill.status.online .dot { background: var(--emerald); }
   .pill.status.offline .dot { background: var(--danger); }
   .pill.status.checking .dot { background: var(--amber); }
+  .pill.status.unknown .dot { background: var(--muted); }
   .pill.status.error { display: none; }
 
-  /* ---- проверка «можно или нет?» ---- */
-  .ask {
+  /* ---- проверка «можно или нет?» внутри тулбара ---- */
+  .answer {
     display: none;
   }
 
-  html.js .ask {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px;
-    margin: 0 0 30px;
-    padding: 16px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: var(--panel);
-  }
-
-  .ask-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font: 700 14px/1 var(--body);
-    color: var(--ink);
-    padding: 14px 20px;
-    border: 1px solid rgba(52, 211, 153, .42);
-    border-radius: 999px;
-    background: rgba(52, 211, 153, .12);
-    cursor: pointer;
-  }
-
-  .ask-btn:hover { border-color: rgba(52, 211, 153, .72); background: rgba(52, 211, 153, .2); }
-  .ask-btn:active { transform: translateY(1px); }
-
-  .ask-btn svg { width: 15px; height: 15px; flex: none; color: var(--emerald); }
-
-  .answer {
+  html.js .answer {
+    display: block;
     flex: 1 1 100%;
     margin: 0;
     font-size: 14.5px;

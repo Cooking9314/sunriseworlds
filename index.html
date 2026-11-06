@@ -130,14 +130,14 @@
     <section id="banned">
       <div class="sec-head">
         <h2 class="title"><svg aria-hidden="true"><use href="#i-ban"/></svg><span>Список запрещённых модификаций</span></h2>
-        <p>Ищи по названию или функции.</p>
+        <p>Ищи по названию или функции — там же появится ответ, можно ли ставить мод.</p>
       </div>
       <hr class="rule">
 
       <div class="toolbar" data-rise>
         <label class="field">
           <svg aria-hidden="true"><use href="#i-search"/></svg>
-          <input id="q" type="search" placeholder="Например: reach, xray, автокликер, Litematica…" autocomplete="off" aria-label="Поиск по списку запрещённых модификаций">
+          <input id="q" type="search" placeholder="Можно ли Xaero's Map? Введи название или функцию…" autocomplete="off" aria-label="Поиск по списку и проверка, разрешён ли мод" aria-describedby="answer">
         </label>
         <div class="chips">
           <a class="chip" href="#c-clients">Чит-клиенты</a>
@@ -148,16 +148,8 @@
           <a class="chip" href="#c-auto">Авто</a>
         </div>
         <span class="counter">Показано: <b id="found">все</b></span>
+        <p class="answer" id="answer" role="status">Начни печатать: список отфильтруется, а здесь появится ответ — можно ли ставить мод.</p>
       </div>
-
-      <form class="ask" id="ask" data-rise>
-        <label class="field">
-          <svg aria-hidden="true"><use href="#i-inspect"/></svg>
-          <input id="ask-q" type="search" placeholder="Можно ли Xaero's Map? Введи название…" autocomplete="off" aria-label="Проверить, разрешён ли мод">
-        </label>
-        <button class="ask-btn" type="submit"><svg aria-hidden="true"><use href="#i-scale"/></svg>Проверить</button>
-        <p class="answer" id="answer">Напиши название мода — страница сверит его со списком запрещённых и с разделом «Что можно».</p>
-      </form>
 
       <div class="cat" id="c-clients" data-rise>
         <div class="cat-head">
@@ -372,11 +364,11 @@
   }
 
   function apply() {
-    var query = norm(input.value);
+    var forms = formsFor(input.value);
     var visible = 0;
 
     items.forEach(function (item) {
-      var hit = !query || norm(item.textContent).indexOf(query) !== -1;
+      var hit = anyIn(squash(item.textContent), forms);
       item.hidden = !hit;
       if (hit) visible++;
     });
@@ -386,11 +378,21 @@
       cat.hidden = !any;
     });
 
-    found.textContent = query ? visible + ' из ' + items.length : 'все';
+    found.textContent = squash(input.value) ? visible + ' из ' + items.length : 'все';
     empty.hidden = visible !== 0;
   }
 
-  input.addEventListener('input', apply);
+  input.addEventListener('input', function () {
+    apply();
+    check();
+  });
+
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      check(true);
+    }
+  });
 
   var ipBtn = document.getElementById('ip');
   var hint = ipBtn.querySelector('.hint');
@@ -450,30 +452,50 @@
 
   var statusPill = document.getElementById('status');
   var statusText = document.getElementById('status-text');
-  var statusUrl = 'https://api.mcsrvstat.us/3/' + ip;
   var statusTimer;
 
-  function markStatus(state, text, at) {
+  /* mcsrvstat не умеет ходить за NAT-файрволы и отвечает «офлайн» там, где сервер жив,
+     поэтому спрашиваем два сервиса: второй служит запасным, а не уточняющим */
+  var statusSources = [
+    { name: 'mcstatus.io', url: 'https://api.mcstatus.io/v2/status/java/' + ip },
+    { name: 'mcsrvstat.us', url: 'https://api.mcsrvstat.us/3/' + ip }
+  ];
+
+  function markStatus(state, text, note) {
     statusPill.hidden = false;
     statusPill.className = 'pill status ' + state;
     statusText.textContent = text;
-    statusPill.title = 'Проверяет mcsrvstat.us' + (at ? ', в ' + at : '');
+    statusPill.title = note;
+  }
+
+  function askStatus(src) {
+    return fetch(src.url, { cache: 'no-store' }).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    });
+  }
+
+  function retryStatus() {
+    clearTimeout(statusTimer);
+    statusTimer = setTimeout(readStatus, 60000);
   }
 
   function readStatus() {
-    fetch(statusUrl, { cache: 'no-store' }).then(function (r) {
-      if (!r.ok) throw new Error(r.status);
-      return r.json();
+    var used = statusSources[0];
+    markStatus('checking', 'проверяем…', 'Проверяем статус сервера');
+    askStatus(used).catch(function () {
+      used = statusSources[1];
+      return askStatus(used);
     }).then(function (data) {
       var at = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-      if (data.online && data.players) markStatus('online', 'онлайн ' + data.players.online + '/' + data.players.max, at);
-      else if (data.online) markStatus('online', 'сервер отвечает', at);
-      else markStatus('offline', 'сейчас офлайн', at);
-      clearTimeout(statusTimer);
-      statusTimer = setTimeout(readStatus, 60000);
+      var note = 'Источник: ' + used.name + ', проверено в ' + at;
+      if (!data.online) markStatus('offline', 'сейчас офлайн', note);
+      else if (data.players) markStatus('online', 'онлайн ' + data.players.online + '/' + data.players.max, note);
+      else markStatus('online', 'сервер отвечает', note);
+      retryStatus();
     }).catch(function () {
-      clearTimeout(statusTimer);
-      statusPill.className = 'pill status error';
+      markStatus('unknown', 'статус недоступен', 'Ни один сервис проверки не ответил — попробуй позже.');
+      retryStatus();
     });
   }
 
@@ -488,14 +510,27 @@
     statusPill.className = 'pill status error';
   }
 
-  var askForm = document.getElementById('ask');
-  var askInput = document.getElementById('ask-q');
   var answer = document.getElementById('answer');
-  var askHint = answer.textContent;
+  var answerHint = answer.textContent;
   var flashTimer;
 
   function squash(s) {
     return norm(s).replace(/[^a-zа-я0-9]/g, '');
+  }
+
+  /* кириллицу сводим к латинице и пробуем ещё вариант k→c: «скаффолд» = Scaffold, «клик» = click */
+  function formsFor(value) {
+    var query = squash(value);
+    var alt = squash(latin(query));
+    var forms = [query, alt, alt.replace(/k/g, 'c')];
+    return forms.filter(function (form, i) { return forms.indexOf(form) === i; });
+  }
+
+  function anyIn(text, forms) {
+    for (var i = 0; i < forms.length; i++) {
+      if (text.indexOf(forms[i]) !== -1) return true;
+    }
+    return false;
   }
 
   function esc(s) {
@@ -581,15 +616,11 @@
     index.forEach(function (entry) { entry.el.classList.remove('flash'); });
   }
 
-  function reveal(hit, also) {
+  function reveal(hit, also, scroll) {
     clearFlash();
-    if (hit.el.hidden) {
-      input.value = '';
-      apply();
-    }
     hit.el.classList.add('flash');
     if (also) also.el.classList.add('flash');
-    hit.el.scrollIntoView({ block: 'center', behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+    if (scroll && !hit.el.hidden) hit.el.scrollIntoView({ block: 'center', behavior: reduceMotion.matches ? 'auto' : 'smooth' });
     flashTimer = setTimeout(clearFlash, 1800);
   }
 
@@ -599,27 +630,18 @@
     return ' <span class="more">· ещё ' + rest + ' ' + plural(rest, 'совпадение', 'совпадения', 'совпадений') + '</span>';
   }
 
-  function check() {
-    var raw = norm(askInput.value);
-    var query = squash(raw);
-    var alt = squash(latin(raw));
-    var forms = alt !== query ? [query, alt] : [query];
+  function check(scroll) {
+    var forms = formsFor(input.value);
+    var query = forms[0];
     clearFlash();
 
     if (query.length < 2) {
-      answer.textContent = askHint;
+      answer.textContent = answerHint;
       return;
     }
 
-    function anyIn(text) {
-      for (var i = 0; i < forms.length; i++) {
-        if (text.indexOf(forms[i]) !== -1) return true;
-      }
-      return false;
-    }
-
     function score(entry) {
-      return anyIn(squash(entry.name)) ? 2 : 1;
+      return anyIn(squash(entry.name), forms) ? 2 : 1;
     }
 
     function nearest() {
@@ -637,7 +659,7 @@
     }
 
     var hits = index.filter(function (entry) {
-      return anyIn(entry.hay);
+      return anyIn(entry.hay, forms);
     }).sort(function (a, b) {
       return score(b) - score(a) || a.name.length - b.name.length;
     });
@@ -663,13 +685,8 @@
     }
 
     answer.innerHTML = lines.join('');
-    reveal(bad[0] || good[0], bad.length ? good[0] : null);
+    reveal(bad[0] || good[0], bad.length ? good[0] : null, scroll);
   }
-
-  askForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    check();
-  });
 
   var root = document.documentElement;
   root.classList.add('js');
