@@ -77,7 +77,6 @@
       <a href="#allowed">Разрешено</a>
       <a href="#penalty">Наказания</a>
       <a href="#check">Проверки</a>
-      <a href="#discord">Discord</a>
     </nav>
   </div>
   <div class="progress" id="progress" aria-hidden="true"></div>
@@ -99,15 +98,25 @@
           </button>
         </div>
       </div>
-      <aside class="torch-card" data-rise>
-        <h2><svg style="width:18px;height:18px;vertical-align:-3px;color:var(--gold)" aria-hidden="true"><use href="#i-torch"/></svg> Почему так строго</h2>
-        <p>SMP живёт на доверии: один игрок с Freecam или автокликером обесценивает чужие недели копа, фарма и постройки базы. Поэтому список читов открыт и конкретен — чтобы не было споров «а это можно?».</p>
-        <div class="stats">
-          <div class="stat"><b id="stat-total">—</b><span>запрещено</span></div>
-          <div class="stat"><b id="stat-cats">—</b><span>категорий</span></div>
-          <div class="stat"><b>до&nbsp;перм.</b><span>наказание</span></div>
-        </div>
-      </aside>
+      <div class="hero-side">
+        <aside class="torch-card" data-rise>
+          <h2><svg style="width:18px;height:18px;vertical-align:-3px;color:var(--gold)" aria-hidden="true"><use href="#i-torch"/></svg> Почему так строго</h2>
+          <p>SMP живёт на доверии: один игрок с Freecam или автокликером обесценивает чужие недели копа, фарма и постройки базы. Поэтому список читов открыт и конкретен — чтобы не было споров «а это можно?».</p>
+          <div class="stats">
+            <div class="stat"><b id="stat-total">—</b><span>запрещено</span></div>
+            <div class="stat"><b id="stat-cats">—</b><span>категорий</span></div>
+            <div class="stat"><b>до&nbsp;перм.</b><span>наказание</span></div>
+          </div>
+        </aside>
+
+        <aside class="dc-card" id="dc" data-rise data-guild="" data-invite="">
+          <h2><span class="dc-mark" id="dc-mark" aria-hidden="true"><svg><use href="#i-mic"/></svg></span> <span id="dc-name">Discord</span></h2>
+          <p class="dc-count" id="dc-count" hidden></p>
+          <ul class="dc-people" id="dc-people" hidden></ul>
+          <a class="dc-join" id="dc-join" hidden rel="noopener noreferrer" target="_blank">Присоединиться</a>
+          <p class="dc-note" id="dc-note">Ссылка-приглашение появится в этом блоке, как только админ её добавит.</p>
+        </aside>
+      </div>
     </section>
 
     <section id="spotlight">
@@ -333,27 +342,6 @@
         <li><svg aria-hidden="true"><use href="#i-inspect"/></svg><span><b>Выборочные проверки</b> suspicious-игроков: скриншоты списка модов и папки <code>mods</code>.</span></li>
         <li><svg aria-hidden="true"><use href="#i-scale"/></svg><span><b>Апелляция</b> подаётся администратору в игре; за ложный донос наказание не выдаём — сначала разбираемся.</span></li>
       </ul>
-    </section>
-
-    <section id="discord">
-      <div class="sec-head">
-        <h2 class="title"><svg aria-hidden="true"><use href="#i-mic"/></svg><span>Discord сервера</span></h2>
-        <p>Обсуждение, жалобы, объявления. Правила здесь важнее всего, что написано в чате.</p>
-      </div>
-      <hr class="rule">
-
-      <div class="dc" id="dc" data-rise data-guild="" data-invite="">
-        <div class="dc-top">
-          <span class="dc-mark" id="dc-mark" aria-hidden="true"><svg><use href="#i-mic"/></svg></span>
-          <div class="dc-who">
-            <b id="dc-name">Sunrise Worlds</b>
-            <p id="dc-count" hidden></p>
-          </div>
-          <a class="dc-join" id="dc-join" hidden rel="noopener noreferrer" target="_blank">Присоединиться</a>
-        </div>
-        <ul class="dc-people" id="dc-people" hidden></ul>
-        <p class="dc-note" id="dc-note">Ссылка-приглашение появится в этом блоке, как только админ её добавит.</p>
-      </div>
     </section>
 
   </div>
@@ -598,7 +586,7 @@
       return { member: m, status: by[m.id] || m.status || 'offline' };
     }).sort(function (a, b) {
       return DC_ORDER[a.status] - DC_ORDER[b.status];
-    }).slice(0, 8);
+    }).slice(0, 6);
 
     dcPeople.textContent = '';
     list.forEach(function (row) { dcPeople.appendChild(dcPerson(row.member, row.status)); });
@@ -639,7 +627,7 @@
       dcCount.textContent = total + ' ' + plural(total, 'участник', 'участника', 'участников') +
         ' · в сети ' + online;
     }
-    dcNote.textContent = 'Статистику отдаёт Discord, обновляется раз в минуту. В ' + at + '.';
+    dcNote.textContent = 'Данные Discord, обновлено в ' + at + '.';
   }
 
   function dcFail() {
