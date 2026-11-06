@@ -77,6 +77,7 @@
       <a href="#allowed">Разрешено</a>
       <a href="#penalty">Наказания</a>
       <a href="#check">Проверки</a>
+      <a href="#discord">Discord</a>
     </nav>
   </div>
   <div class="progress" id="progress" aria-hidden="true"></div>
@@ -334,6 +335,27 @@
       </ul>
     </section>
 
+    <section id="discord">
+      <div class="sec-head">
+        <h2 class="title"><svg aria-hidden="true"><use href="#i-mic"/></svg><span>Discord сервера</span></h2>
+        <p>Обсуждение, жалобы, объявления. Правила здесь важнее всего, что написано в чате.</p>
+      </div>
+      <hr class="rule">
+
+      <div class="dc" id="dc" data-rise data-guild="" data-invite="">
+        <div class="dc-top">
+          <span class="dc-mark" id="dc-mark" aria-hidden="true"><svg><use href="#i-mic"/></svg></span>
+          <div class="dc-who">
+            <b id="dc-name">Sunrise Worlds</b>
+            <p id="dc-count" hidden></p>
+          </div>
+          <a class="dc-join" id="dc-join" hidden rel="noopener noreferrer" target="_blank">Присоединиться</a>
+        </div>
+        <ul class="dc-people" id="dc-people" hidden></ul>
+        <p class="dc-note" id="dc-note">Ссылка-приглашение появится в этом блоке, как только админ её добавит.</p>
+      </div>
+    </section>
+
   </div>
 </main>
 
@@ -512,6 +534,140 @@
     });
   } else {
     statusPill.className = 'pill status error';
+  }
+
+  /* Discord: публичные эндпоинты отдают JSON без бота и без ключей; всё, что приходит
+     оттуда, вставляем только через textContent — строки контролирует Discord */
+  var dc = document.getElementById('dc');
+  var dcName = document.getElementById('dc-name');
+  var dcCount = document.getElementById('dc-count');
+  var dcJoin = document.getElementById('dc-join');
+  var dcPeople = document.getElementById('dc-people');
+  var dcNote = document.getElementById('dc-note');
+  var dcMark = document.getElementById('dc-mark');
+  var dcTimer;
+  var dcGuild = dc.dataset.guild;
+  var dcInvite = dc.dataset.invite;
+  var dcUrl = dcInvite ? 'https://discord.com/api/invites/' + dcInvite + '?with_counts=true'
+    : dcGuild ? 'https://discord.com/api/guilds/' + dcGuild + '/widget.json' : '';
+  var DC_WWW = dcInvite ? 'https://discord.gg/' + dcInvite : '';
+  var DC_ORDER = { online: 0, idle: 1, dnd: 2, invisible: 3, offline: 4 };
+  var DC_LABEL = { online: 'в сети', idle: 'отошёл', dnd: 'не беспокоить', invisible: 'невидимка', offline: 'не в сети' };
+
+  function dcLink(url) {
+    dcJoin.href = url;
+    dcJoin.hidden = false;
+  }
+
+  function dcSafe(hash) {
+    return typeof hash === 'string' && /^[A-Za-z0-9_-]{8,80}$/.test(hash) ? hash : '';
+  }
+
+  function dcAvatar(member) {
+    var hash = dcSafe(member.avatar);
+    return hash
+      ? 'https://cdn.discordapp.com/avatars/' + encodeURIComponent(member.id) + '/' + hash + '.png?size=64'
+      : 'https://cdn.discordapp.com/embed/avatars/0.png';
+  }
+
+  function dcPerson(member, status) {
+    var li = document.createElement('li');
+    var img = document.createElement('img');
+    img.alt = '';
+    img.loading = 'lazy';
+    img.className = 'dc-avatar ' + status;
+    img.onerror = function () { img.className = 'dc-avatar offline'; img.src = 'https://cdn.discordapp.com/embed/avatars/0.png'; };
+    img.src = dcAvatar(member);
+    var name = document.createElement('span');
+    name.textContent = member.global_name || member.username || 'участник';
+    var tag = document.createElement('i');
+    tag.textContent = DC_LABEL[status] || 'не в сети';
+    li.appendChild(img);
+    li.appendChild(name);
+    li.appendChild(tag);
+    return li;
+  }
+
+  function dcPeopleList(d) {
+    var by = {};
+    (d.presences || []).forEach(function (p) {
+      var id = p.member_id || (p.user && p.user.id);
+      if (id) by[id] = p.status;
+    });
+    var list = (d.members || []).map(function (m) {
+      return { member: m, status: by[m.id] || m.status || 'offline' };
+    }).sort(function (a, b) {
+      return DC_ORDER[a.status] - DC_ORDER[b.status];
+    }).slice(0, 8);
+
+    dcPeople.textContent = '';
+    list.forEach(function (row) { dcPeople.appendChild(dcPerson(row.member, row.status)); });
+    dcPeople.hidden = list.length === 0;
+    return list.filter(function (row) { return row.status !== 'invisible' && row.status !== 'offline'; }).length;
+  }
+
+  var dcMarkIcon = dcMark.innerHTML;
+
+  function dcIcon(hash, id) {
+    var safe = dcSafe(hash);
+    if (!safe) return;
+    var img = document.createElement('img');
+    img.alt = '';
+    img.src = 'https://cdn.discordapp.com/icons/' + encodeURIComponent(id) + '/' + safe + '.png?size=128';
+    img.onerror = function () {
+      dcMark.textContent = '';
+      dcMark.innerHTML = dcMarkIcon;
+    };
+    dcMark.textContent = '';
+    dcMark.appendChild(img);
+  }
+
+  function dcShow(d) {
+    var at = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+    dcName.textContent = d.name || (d.guild && d.guild.name) || 'Sunrise Worlds';
+    if (d.guild) dcIcon(d.guild.icon, d.guild.id);
+
+    if (d.members || d.presences) {
+      var here = dcPeopleList(d);
+      dcCount.hidden = false;
+      dcCount.textContent = here + ' ' + plural(here, 'человек', 'человека', 'человек') + ' в сети';
+      if (d.instant_invite) dcLink(d.instant_invite);
+    } else {
+      var total = d.approximate_member_count || 0;
+      var online = d.approximate_presence_count || 0;
+      dcCount.hidden = false;
+      dcCount.textContent = total + ' ' + plural(total, 'участник', 'участника', 'участников') +
+        ' · в сети ' + online;
+    }
+    dcNote.textContent = 'Статистику отдаёт Discord, обновляется раз в минуту. В ' + at + '.';
+  }
+
+  function dcFail() {
+    dcCount.hidden = true;
+    dcPeople.hidden = true;
+    dcNote.textContent = DC_WWW
+      ? 'Discord не отдал статистику — кнопка работает, это данные с их API.'
+      : 'Discord не отдал статистику: проверь, включён ли виджет на сервере.';
+  }
+
+  function readDiscord() {
+    clearTimeout(dcTimer);
+    dcTimer = setTimeout(readDiscord, 60000);
+    if (!window.fetch) { dcFail(); return; }
+    fetch(dcUrl, { cache: 'no-store' }).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    }).then(dcShow).catch(dcFail);
+  }
+
+  if (dcUrl) {
+    if (DC_WWW) dcLink(DC_WWW);
+    readDiscord();
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) return;
+      clearTimeout(dcTimer);
+      readDiscord();
+    });
   }
 
   var answer = document.getElementById('answer');
