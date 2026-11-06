@@ -141,6 +141,8 @@
     transform: translateY(-1px);
   }
 
+  .nav a.active { color: var(--ink); background: var(--panel-2); }
+
   /* ---- герой ---- */
   .hero {
     display: grid;
@@ -261,6 +263,81 @@
   }
 
   button.pill.copied code { color: var(--emerald); }
+
+  /* ---- статус сервера ---- */
+  .pill.status { font-variant-numeric: tabular-nums; }
+
+  .pill.status .dot {
+    width: 9px;
+    height: 9px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--muted);
+  }
+
+  .pill.status.online .dot { background: var(--emerald); }
+  .pill.status.offline .dot { background: var(--danger); }
+  .pill.status.checking .dot { background: var(--amber); }
+  .pill.status.error { display: none; }
+
+  /* ---- проверка «можно или нет?» ---- */
+  .ask {
+    display: none;
+  }
+
+  html.js .ask {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 30px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--panel);
+  }
+
+  .ask-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font: 700 14px/1 var(--body);
+    color: var(--ink);
+    padding: 14px 20px;
+    border: 1px solid rgba(52, 211, 153, .42);
+    border-radius: 999px;
+    background: rgba(52, 211, 153, .12);
+    cursor: pointer;
+  }
+
+  .ask-btn:hover { border-color: rgba(52, 211, 153, .72); background: rgba(52, 211, 153, .2); }
+  .ask-btn:active { transform: translateY(1px); }
+
+  .ask-btn svg { width: 15px; height: 15px; flex: none; color: var(--emerald); }
+
+  .answer {
+    flex: 1 1 100%;
+    margin: 0;
+    font-size: 14.5px;
+    color: var(--muted);
+  }
+
+  .answer .line {
+    display: block;
+    margin-top: 7px;
+    padding-left: 12px;
+    border-left: 2px solid var(--line);
+  }
+
+  .answer .line:first-child { margin-top: 0; }
+  .answer .line.no { border-left-color: rgba(251, 111, 111, .55); }
+  .answer .line.yes { border-left-color: rgba(52, 211, 153, .5); }
+  .answer .line.fog { border-left-color: rgba(247, 185, 85, .5); }
+  .answer .line b { color: var(--ink); }
+  .answer .line.no b { color: var(--danger); }
+  .answer .line.yes b { color: var(--emerald); }
+  .answer .line.fog b { color: var(--amber); }
+  .answer .more { color: #6f8492; font-weight: 500; }
 
   /* ---- карточка факела ---- */
   .torch-card {
@@ -891,6 +968,19 @@
 
   .field input:focus { animation: glowHint 2.4s ease-in-out infinite; }
 
+  .nav a.active::after { transform: scaleX(1); }
+
+  /* живой сервер: точка дышит тем же свечением, что и поле поиска */
+  .pill.status.online .dot { animation: glowHint 2.4s ease-in-out infinite; }
+
+  /* проверка «можно или нет?»: найденная карточка вспыхивает */
+  .mod.flash, .allowed li.flash { animation: flashHit 1.7s ease-out; }
+
+  @keyframes flashHit {
+    0%, 42% { box-shadow: 0 0 0 4px rgba(52, 211, 153, .24); }
+    100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
 
@@ -905,7 +995,7 @@
     }
 
     .top-in, .hero h1, .hero .kicker, .hero .lede, .hero .meta { animation: none; }
-    .scene, .torch-card::after, .mod:hover::after, .mod:hover .mark, .field input:focus { animation: none; }
+    .scene, .torch-card::after, .mod:hover::after, .mod:hover .mark, .field input:focus, .pill.status.online .dot, .mod.flash { animation: none; }
     .mod, .chip, .nav a, .spot, .allowed li, .torch-card, .cat-icon svg, .mark svg, tbody tr, .top-in, .nav a::after { transition: none; }
     .mod::after { opacity: 0; }
     .progress { display: none; }

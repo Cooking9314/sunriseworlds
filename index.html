@@ -88,6 +88,7 @@
         <p class="lede">Это первая страница правил <b>Sunrise Worlds SMP</b>: полный список клиентских модов, аддонов, ресурспаков и макросов, которые дают преимущество над другими игроками. Всё, что не перечислено здесь как запрещённое, <b>не автоматически разрешено</b> — если мод меняет баланс, реакцию или видимость мира, он под запретом.</p>
         <div class="meta">
           <span class="pill"><svg aria-hidden="true"><use href="#i-calendar"/></svg>Обновлено: <code>05.11.2026</code></span>
+          <span class="pill status checking" id="status" hidden><span class="dot" aria-hidden="true"></span><span id="status-text">проверяем…</span></span>
           <button class="pill" id="ip" type="button" data-ip="195.58.152.27:25596">
             <svg aria-hidden="true"><use href="#i-server"/></svg> IP: <code>195.58.152.27:25596</code> <span class="hint">нажми, чтобы скопировать</span>
           </button>
@@ -149,6 +150,15 @@
         <span class="counter">Показано: <b id="found">все</b></span>
       </div>
 
+      <form class="ask" id="ask" data-rise>
+        <label class="field">
+          <svg aria-hidden="true"><use href="#i-inspect"/></svg>
+          <input id="ask-q" type="search" placeholder="Можно ли Xaero's Map? Введи название…" autocomplete="off" aria-label="Проверить, разрешён ли мод">
+        </label>
+        <button class="ask-btn" type="submit"><svg aria-hidden="true"><use href="#i-scale"/></svg>Проверить</button>
+        <p class="answer" id="answer">Напиши название мода — страница сверит его со списком запрещённых и с разделом «Что можно».</p>
+      </form>
+
       <div class="cat" id="c-clients" data-rise>
         <div class="cat-head">
           <span class="cat-icon"><svg aria-hidden="true"><use href="#i-cube"/></svg></span>
@@ -200,7 +210,7 @@
         <ul class="grid">
           <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>KillAura / TargetBot / TriggerBot <span class="sev instant"><svg aria-hidden="true"><use href="#i-slash"/></svg>бан сразу</span></h4><p>Автоматическая атака всех вокруг и удар «в стену» по цели.</p></div></li>
           <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Reach и расширенные хитбоксы <span class="sev instant"><svg aria-hidden="true"><use href="#i-slash"/></svg>бан сразу</span></h4><p>Удар дальше ванильных 3 блоков и «раздутая» модель противника.</p></div></li>
-          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Autoclicker, CPS-макросы, авто-спринт-клик <span class="sev instant"><svg aria-hidden="true"><use href="#i-slash"/></svg>бан сразу</span></h4><p>Программы (AutoHotkey, мышь-софт, макросы в клиенте) и моды с фиксированным CPS.</p></div></li>
+          <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Autoclicker / автокликер, CPS-макросы, авто-спринт-клик <span class="sev instant"><svg aria-hidden="true"><use href="#i-slash"/></svg>бан сразу</span></h4><p>Программы (AutoHotkey, мышь-софт, макросы в клиенте) и моды с фиксированным CPS.</p></div></li>
           <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>AutoTotem / AutoEat / AutoShield <span class="sev instant"><svg aria-hidden="true"><use href="#i-slash"/></svg>бан сразу</span></h4><p>Реакция на 0 мс: тотем и еда вставляются раньше, чем успевает человек.</p></div></li>
           <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Scaffold / AutoBlock / Telly-bridge <span class="sev instant"><svg aria-hidden="true"><use href="#i-slash"/></svg>бан сразу</span></h4><p>Автостройка под ногами и блокирование ударов без участия игрока.</p></div></li>
           <li class="mod"><span class="mark"><svg aria-hidden="true"><use href="#i-ban"/></svg></span><div><h4>Criticals / FastPlace / AutoProjectile <span class="sev after"><svg aria-hidden="true"><use href="#i-warn"/></svg>бан после предупреждения</span></h4><p>Авто-криты, ускоренная установка блоков и автострелы/снежки по расписанию.</p></div></li>
@@ -431,10 +441,234 @@
   });
 
   document.addEventListener('keydown', function (e) {
-    if (e.key === '/' && document.activeElement !== input) {
+    var tag = (document.activeElement || {}).tagName;
+    if (e.key === '/' && tag !== 'INPUT' && tag !== 'TEXTAREA') {
       e.preventDefault();
       input.focus();
     }
+  });
+
+  var statusPill = document.getElementById('status');
+  var statusText = document.getElementById('status-text');
+  var statusUrl = 'https://api.mcsrvstat.us/3/' + ip;
+  var statusTimer;
+
+  function markStatus(state, text, at) {
+    statusPill.hidden = false;
+    statusPill.className = 'pill status ' + state;
+    statusText.textContent = text;
+    statusPill.title = 'Проверяет mcsrvstat.us' + (at ? ', в ' + at : '');
+  }
+
+  function readStatus() {
+    fetch(statusUrl, { cache: 'no-store' }).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    }).then(function (data) {
+      var at = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+      if (data.online && data.players) markStatus('online', 'онлайн ' + data.players.online + '/' + data.players.max, at);
+      else if (data.online) markStatus('online', 'сервер отвечает', at);
+      else markStatus('offline', 'сейчас офлайн', at);
+      clearTimeout(statusTimer);
+      statusTimer = setTimeout(readStatus, 60000);
+    }).catch(function () {
+      clearTimeout(statusTimer);
+      statusPill.className = 'pill status error';
+    });
+  }
+
+  if (window.fetch) {
+    readStatus();
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) return;
+      clearTimeout(statusTimer);
+      readStatus();
+    });
+  } else {
+    statusPill.className = 'pill status error';
+  }
+
+  var askForm = document.getElementById('ask');
+  var askInput = document.getElementById('ask-q');
+  var answer = document.getElementById('answer');
+  var askHint = answer.textContent;
+  var flashTimer;
+
+  function squash(s) {
+    return norm(s).replace(/[^a-zа-я0-9]/g, '');
+  }
+
+  function esc(s) {
+    return s.replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  function plural(n, one, few, many) {
+    var ten = n % 10, hundred = n % 100;
+    if (ten === 1 && hundred !== 11) return one;
+    if (ten >= 2 && ten <= 4 && (hundred < 12 || hundred > 14)) return few;
+    return many;
+  }
+
+  function clean(s) {
+    return s.replace(/\s+/g, ' ').trim();
+  }
+
+  /* игроки пишут «скаффолд» и «аймбот» кириллицей — сводим к латинице и уже по ней ищем */
+  var CYR = {
+    а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh', з: 'z', и: 'i', й: 'y',
+    к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's', т: 't', у: 'u', ф: 'f',
+    х: 'h', ц: 'ts', ч: 'ch', ш: 'sh', щ: 'sch', ы: 'y', э: 'e', ю: 'yu', я: 'ya'
+  };
+
+  function latin(s) {
+    return s.replace(/[а-яё]/g, function (c) { return CYR[c] || c; });
+  }
+
+  function wordsOf(s) {
+    var list = [];
+    norm(s).split(/[^a-zа-я0-9]+/).forEach(function (word) {
+      if (!word) return;
+      list.push(word);
+      if (latin(word) !== word) list.push(latin(word));
+    });
+    return list;
+  }
+
+  function dist(a, b) {
+    if (a === b) return 0;
+    var prev = [], cur, i, j;
+    for (j = 0; j <= b.length; j++) prev[j] = j;
+    for (i = 1; i <= a.length; i++) {
+      cur = [i];
+      for (j = 1; j <= b.length; j++) {
+        cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1));
+      }
+      prev = cur;
+    }
+    return prev[b.length];
+  }
+
+  var index = items.map(function (item) {
+    var head = item.querySelector('h4');
+    var cat = item.parentNode;
+    while (cat && !cat.classList.contains('cat')) cat = cat.parentNode;
+    var name = clean(head.firstChild.nodeType === 3 ? head.firstChild.textContent : head.textContent);
+    return {
+      banned: true,
+      el: item,
+      name: name,
+      words: wordsOf(name),
+      verdict: clean(item.querySelector('.sev').textContent),
+      where: clean(cat.querySelector('h3').textContent),
+      hay: squash(item.textContent)
+    };
+  }).concat(Array.prototype.slice.call(document.querySelectorAll('#allowed li')).map(function (li) {
+    var name = clean(li.querySelector('b').textContent).replace(/:$/g, '');
+    return {
+      banned: false,
+      el: li,
+      name: name,
+      words: wordsOf(name),
+      verdict: clean(li.textContent),
+      hay: squash(li.textContent)
+    };
+  }));
+
+  function clearFlash() {
+    clearTimeout(flashTimer);
+    index.forEach(function (entry) { entry.el.classList.remove('flash'); });
+  }
+
+  function reveal(hit, also) {
+    clearFlash();
+    if (hit.el.hidden) {
+      input.value = '';
+      apply();
+    }
+    hit.el.classList.add('flash');
+    if (also) also.el.classList.add('flash');
+    hit.el.scrollIntoView({ block: 'center', behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+    flashTimer = setTimeout(clearFlash, 1800);
+  }
+
+  function tail(list) {
+    var rest = list.length - 1;
+    if (rest < 1) return '';
+    return ' <span class="more">· ещё ' + rest + ' ' + plural(rest, 'совпадение', 'совпадения', 'совпадений') + '</span>';
+  }
+
+  function check() {
+    var raw = norm(askInput.value);
+    var query = squash(raw);
+    var alt = squash(latin(raw));
+    var forms = alt !== query ? [query, alt] : [query];
+    clearFlash();
+
+    if (query.length < 2) {
+      answer.textContent = askHint;
+      return;
+    }
+
+    function anyIn(text) {
+      for (var i = 0; i < forms.length; i++) {
+        if (text.indexOf(forms[i]) !== -1) return true;
+      }
+      return false;
+    }
+
+    function score(entry) {
+      return anyIn(squash(entry.name)) ? 2 : 1;
+    }
+
+    function nearest() {
+      var limit = Math.max(1, Math.min(3, Math.round(query.length / 3)));
+      var cands = index.map(function (entry) {
+        var d = 99;
+        entry.words.forEach(function (word) {
+          forms.forEach(function (form) { d = Math.min(d, dist(form, word)); });
+        });
+        return d <= limit ? { entry: entry, d: d } : null;
+      }).filter(Boolean).sort(function (a, b) {
+        return a.d - b.d || (b.entry.banned ? 1 : 0) - (a.entry.banned ? 1 : 0) || a.entry.name.length - b.entry.name.length;
+      });
+      return cands.length ? cands[0].entry : null;
+    }
+
+    var hits = index.filter(function (entry) {
+      return anyIn(entry.hay);
+    }).sort(function (a, b) {
+      return score(b) - score(a) || a.name.length - b.name.length;
+    });
+
+    var bad = hits.filter(function (entry) { return entry.banned; });
+    var good = hits.filter(function (entry) { return !entry.banned; });
+    var lines = [];
+
+    if (bad.length) {
+      lines.push('<span class="line no"><b>Нельзя.</b> ' + esc(bad[0].name) + ' — ' + esc(bad[0].verdict) + ' · ' + esc(bad[0].where) + tail(bad) + '</span>');
+    }
+
+    if (good.length) {
+      lines.push('<span class="line yes"><b>Можно с условиями.</b> ' + esc(good[0].verdict) + tail(good) + '</span>');
+    }
+
+    if (!lines.length) {
+      var guess = nearest();
+      answer.innerHTML = guess
+        ? '<span class="line fog"><b>Точно такого названия в списке нет.</b> Ближайшее — «' + esc(guess.name) + '», ' + esc(guess.banned ? guess.verdict + ' · ' + guess.where : 'раздел «Что можно»') + '. Уточни написание или спроси админа.</span>'
+        : '<span class="line fog"><b>В списке такого нет.</b> Отсутствие в запретах — не разрешение: если мод меняет баланс, видимость или авто-действия, спроси админа.</span>';
+      return;
+    }
+
+    answer.innerHTML = lines.join('');
+    reveal(bad[0] || good[0], bad.length ? good[0] : null);
+  }
+
+  askForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    check();
   });
 
   var root = document.documentElement;
@@ -460,6 +694,30 @@
 
     rising.forEach(function (el) { io.observe(el); });
     reduceMotion.addEventListener('change', showAll);
+  }
+
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav a[href^="#"]'));
+  var sections = navLinks.map(function (link) {
+    return document.getElementById(link.getAttribute('href').slice(1));
+  }).filter(Boolean);
+
+  if ('IntersectionObserver' in window && sections.length === navLinks.length) {
+    var band = {};
+
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) { band[entry.target.id] = entry.isIntersecting; });
+
+      var current = null;
+      sections.forEach(function (section) {
+        if (!current && band[section.id]) current = section.id;
+      });
+
+      navLinks.forEach(function (link) {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+      });
+    }, { rootMargin: '-42% 0px -48% 0px', threshold: 0 });
+
+    sections.forEach(function (section) { spy.observe(section); });
   }
 
   var bar = document.getElementById('progress');
